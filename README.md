@@ -1,7 +1,7 @@
 # MiracleVision
 A robot vision project for RoboMaster
 
-Iteration from RoboVision_Sirius(dgsyrc)
+Iterate from RoboVision_Sirius(dgsyrc)
 
 2024/02/20
 beta 0.1
