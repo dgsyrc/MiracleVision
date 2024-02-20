@@ -107,6 +107,8 @@ add_library(mv-basic-armor SHARED module/armor/basic_armor.cpp)
 list(APPEND MV_EXTRA_LIBS mv-basic-armor)
 add_library(mv-fan-armor SHARED module/armor/fan_armor.cpp)
 list(APPEND MV_EXTRA_LIBS mv-fan-armor)
+add_library(mv-dnn-armor SHARED module/armor/DNN_armor.cpp)
+list(APPEND MV_EXTRA_LIBS mv-dnn-armor)
 
 
 list(APPEND EXTRA_INCLUDES ${PROJECT_SOURCE_DIR}/module/buff)

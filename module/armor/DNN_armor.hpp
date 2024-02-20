@@ -7,7 +7,8 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
-namespace DNN_armor {
+namespace DNN_armor
+{
     struct DNN_Data
     {
         int debug_mode;
@@ -16,10 +17,17 @@ namespace DNN_armor {
         int max_width;
         int min_width;
     };
-    class DNN_Dectect {
-        public:
-            DNN_Dectect(std::string input_path);
-        private:
-            DNN_Data DNN_Config_;
+    class DNN_Dectect
+    {
+    public:
+        DNN_Dectect(std::string input_path);
+
+    private:
+        DNN_Data DNN_Config_;
+    };
+    class DNN_Model
+    {
+    public:
+        DNN_Model(std::string input_path);
     };
 }

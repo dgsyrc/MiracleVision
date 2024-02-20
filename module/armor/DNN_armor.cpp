@@ -11,4 +11,9 @@ namespace DNN_armor
         config_read["MAX_WIDTH"] >> DNN_Config_.max_width;
         config_read["MIN_WIDTH"] >> DNN_Config_.min_width;
     }
+
+    DNN_Model::DNN_Model(std::string input_path)
+    {
+
+    }
 }

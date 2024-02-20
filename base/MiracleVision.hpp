@@ -15,6 +15,7 @@
 #include "devices/camera/mv_video_capture.hpp"
 #include "devices/serial/uart_serial.hpp"
 #include "module/armor/basic_armor.hpp"
+#include "module/armor/DNN_armor.hpp"
 #include "module/buff/basic_buff.hpp"
 #include "module/ml/onnx_inferring.hpp"
 #include "module/record/record.hpp"
@@ -23,6 +24,7 @@
 #include "module/camera/camera_calibration.hpp"
 #include "module/angle_solve/angle_solve.hpp"
 #include "module/buff/new_buff.hpp"
+
 
 #include <string>
 
