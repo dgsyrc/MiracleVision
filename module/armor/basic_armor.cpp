@@ -248,12 +248,12 @@ namespace basic_armor
     draw_img_ = _src_img.clone();
     if (findLight())
     {
-
       if (fittingArmor())
       {
         finalArmor();
         lost_cnt_ = 10;
         // 画图开关
+        fmt::print("[{}] Find Object\n", idntifier_green);
         if (armor_config_.armor_draw == 1 ||
             light_config_.light_draw == 1 ||
             armor_config_.armor_edit == 1 ||
@@ -261,6 +261,7 @@ namespace basic_armor
         {
           if (armor_config_.debug_mode == 1)
           {
+
             cv::imshow("basic_armor", draw_img_);
             cv::waitKey(30);
           }
@@ -967,7 +968,7 @@ namespace basic_armor
       break;
     }
 
-    if (image_config_.gray_edit&&armor_config_.debug_mode)
+    if (image_config_.gray_edit && armor_config_.debug_mode)
     {
       cv::imshow(window_name, bin_color_img);
       cv::waitKey(30);
