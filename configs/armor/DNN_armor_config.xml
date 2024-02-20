@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<opencv_storage>
+
+<!--
+  DEBUG_MODE - display all windows
+  - 1 Enable
+  - 0 Disable
+-->
+<DEBUG_MODE>0</DEBUG_MODE>
+<!--
+  MAX_HEIGHT - 
+-->
+<MAX_HEIGHT>0</MAX_HEIGHT>
+<!--
+  MIN_HEIGHT - 
+-->
+<MIN_HEIGHT>0</MIN_HEIGHT>
+<!--
+  MAX_WIDTH - 
+-->
+<MAX_WIDTH>0</MAX_WIDTH>
+<!--
+  MIN_WIDTH - 
+-->
+<MIN_WIDTH>0</MIN_WIDTH>
+
+
+</opencv_storage>

@@ -7,7 +7,6 @@
  *
  */
 #include "basic_armor.hpp"
-#define RELEASE
 namespace basic_armor
 {
 
@@ -22,26 +21,29 @@ namespace basic_armor
     fs_armor["BLUE_ARMOR_GRAY_TH"] >> image_config_.blue_armor_gray_th;
     fs_armor["RED_ARMOR_GRAY_TH"] >> image_config_.red_armor_gray_th;
 
-    // if (image_config_.method == 0) {
-    fs_armor["RED_ARMOR_COLOR_TH"] >> image_config_.red_armor_color_th;
-    fs_armor["BLUE_ARMOR_COLOR_TH"] >> image_config_.blue_armor_color_th;
-    fs_armor["GREEN_ARMOR_COLOR_TH"] >> image_config_.green_armor_color_th;
-    fs_armor["WHILE_ARMOR_COLOR_TH"] >> image_config_.while_armor_color_th;
-    //} else {
-    fs_armor["H_RED_MIN"] >> image_config_.h_red_min;
-    fs_armor["H_RED_MAX"] >> image_config_.h_red_max;
-    fs_armor["S_RED_MIN"] >> image_config_.s_red_min;
-    fs_armor["S_RED_MAX"] >> image_config_.s_red_max;
-    fs_armor["V_RED_MIN"] >> image_config_.v_red_min;
-    fs_armor["V_RED_MAX"] >> image_config_.v_red_max;
+    if (image_config_.method == 0)
+    {
+      fs_armor["RED_ARMOR_COLOR_TH"] >> image_config_.red_armor_color_th;
+      fs_armor["BLUE_ARMOR_COLOR_TH"] >> image_config_.blue_armor_color_th;
+      fs_armor["GREEN_ARMOR_COLOR_TH"] >> image_config_.green_armor_color_th;
+      fs_armor["WHILE_ARMOR_COLOR_TH"] >> image_config_.while_armor_color_th;
+    }
+    else
+    {
+      fs_armor["H_RED_MIN"] >> image_config_.h_red_min;
+      fs_armor["H_RED_MAX"] >> image_config_.h_red_max;
+      fs_armor["S_RED_MIN"] >> image_config_.s_red_min;
+      fs_armor["S_RED_MAX"] >> image_config_.s_red_max;
+      fs_armor["V_RED_MIN"] >> image_config_.v_red_min;
+      fs_armor["V_RED_MAX"] >> image_config_.v_red_max;
 
-    fs_armor["H_BLUE_MIN"] >> image_config_.h_blue_min;
-    fs_armor["H_BLUE_MAX"] >> image_config_.h_blue_max;
-    fs_armor["S_BLUE_MIN"] >> image_config_.s_blue_min;
-    fs_armor["S_BLUE_MAX"] >> image_config_.s_blue_max;
-    fs_armor["V_BLUE_MIN"] >> image_config_.v_blue_min;
-    fs_armor["V_BLUE_MAX"] >> image_config_.v_blue_max;
-    //}
+      fs_armor["H_BLUE_MIN"] >> image_config_.h_blue_min;
+      fs_armor["H_BLUE_MAX"] >> image_config_.h_blue_max;
+      fs_armor["S_BLUE_MIN"] >> image_config_.s_blue_min;
+      fs_armor["S_BLUE_MAX"] >> image_config_.s_blue_max;
+      fs_armor["V_BLUE_MIN"] >> image_config_.v_blue_min;
+      fs_armor["V_BLUE_MAX"] >> image_config_.v_blue_max;
+    }
 
     fs_armor["LIGHT_DRAW"] >> light_config_.light_draw;
     fs_armor["LIGHT_EDTI"] >> light_config_.light_edit;

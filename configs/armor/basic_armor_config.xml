@@ -1,7 +1,12 @@
 <?xml version="1.0"?>
 <opencv_storage>
 
-<DEBUG_MODE>0</DEBUG_MODE>
+<!--
+  DEBUG_MODE - display all windows
+  - 1 Enable
+  - 0 Disable
+-->
+<DEBUG_MODE>1</DEBUG_MODE>
 <!--
   GRAY_EDIT - 是否调整灰度图参数
   - 1 Enable
