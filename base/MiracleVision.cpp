@@ -99,7 +99,7 @@ int main()
     {
       src_img = src_img * 2; // increase brightness
 #ifndef RELEASE
-      cv::imshow("[armor_parm_edit]", src_img);
+      cv::imshow("[origin]", src_img);
       cv::waitKey(30);
 #endif
 #ifdef PARM_EDIT

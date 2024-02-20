@@ -15,6 +15,7 @@ namespace basic_armor
   {
     cv::FileStorage fs_armor(_armor_config, cv::FileStorage::READ);
     // 初始化基本参数
+    fs_armor["DEBUG_MODE"] >> armor_config_.debug_mode;
     fs_armor["GRAY_EDIT"] >> image_config_.gray_edit;
     fs_armor["COLOR_EDIT"] >> image_config_.color_edit;
     fs_armor["METHOD"] >> image_config_.method;
@@ -91,18 +92,18 @@ namespace basic_armor
     armor_.clear();
     armor_.shrink_to_fit();
 
+    fs_armor << "DEBUG_MODE" << armor_config_.debug_mode;
     fs_armor << "GRAY_EDIT" << image_config_.gray_edit;
     fs_armor << "COLOR_EDIT" << image_config_.color_edit;
     fs_armor << "METHOD" << image_config_.method;
     fs_armor << "BLUE_ARMOR_GRAY_TH" << image_config_.blue_armor_gray_th;
     fs_armor << "RED_ARMOR_GRAY_TH" << image_config_.red_armor_gray_th;
 
-    // if (image_config_.method == 0) {
     fs_armor << "RED_ARMOR_COLOR_TH" << image_config_.red_armor_color_th;
     fs_armor << "BLUE_ARMOR_COLOR_TH" << image_config_.blue_armor_color_th;
     fs_armor << "GREEN_ARMOR_COLOR_TH" << image_config_.green_armor_color_th;
     fs_armor << "WHILE_ARMOR_COLOR_TH" << image_config_.while_armor_color_th;
-    //} else {
+
     fs_armor << "H_RED_MIN" << image_config_.h_red_min;
     fs_armor << "H_RED_MAX" << image_config_.h_red_max;
     fs_armor << "S_RED_MIN" << image_config_.s_red_min;
@@ -116,7 +117,6 @@ namespace basic_armor
     fs_armor << "S_BLUE_MAX" << image_config_.s_blue_max;
     fs_armor << "V_BLUE_MIN" << image_config_.v_blue_min;
     fs_armor << "V_BLUE_MAX" << image_config_.v_blue_max;
-    //}
 
     fs_armor << "LIGHT_EDTI" << light_config_.light_edit;
     fs_armor << "LIGHT_DRAW" << light_config_.light_draw;
@@ -168,29 +168,25 @@ namespace basic_armor
     // 调参开关
     if (light_config_.light_edit == 1)
     {
-#ifndef RELEASE
-      // std::string window_name = {"[basic_armor] findLight() -> light_trackbar"};
-/*
-    cv::namedWindow(window_name);
+      std::string window_name = {"[basic_armor] findLight() -> light_trackbar"};
 
-    cv::createTrackbar("angle_min", window_name,
-                       &light_config_.angle_min, 1800, NULL);
-    cv::createTrackbar("angle_max", window_name,
-                      &light_config_.angle_max, 1800, NULL);
+      cv::namedWindow(window_name);
 
-    cv::createTrackbar("perimeter_min", window_name,
-                       &light_config_.perimeter_min, 100000, NULL);
-    cv::createTrackbar("perimeter_max", window_name,
-                       &light_config_.perimeter_max, 100000, NULL);
+      cv::createTrackbar("angle_min", window_name,
+                         &light_config_.angle_min, 1800, NULL);
+      cv::createTrackbar("angle_max", window_name,
+                         &light_config_.angle_max, 1800, NULL);
 
-    cv::createTrackbar("ratio_w_h_min", window_name,
-                       &light_config_.ratio_w_h_min, 1000, NULL);
-    cv::createTrackbar("ratio_w_h_max", window_name,
-                       &light_config_.ratio_w_h_max, 1000, NULL);
+      cv::createTrackbar("perimeter_min", window_name,
+                         &light_config_.perimeter_min, 100000, NULL);
+      cv::createTrackbar("perimeter_max", window_name,
+                         &light_config_.perimeter_max, 100000, NULL);
 
-    cv::imshow(window_name, light_trackbar_);
-    */
-#endif
+      cv::createTrackbar("ratio_w_h_min", window_name,
+                         &light_config_.ratio_w_h_min, 1000, NULL);
+      cv::createTrackbar("ratio_w_h_max", window_name,
+                         &light_config_.ratio_w_h_max, 1000, NULL);
+      cv::imshow(window_name, light_trackbar_);
     }
 
     for (size_t i = 0; i != contours.size(); ++i)
@@ -250,7 +246,6 @@ namespace basic_armor
     // 预处理
     runImage(_src_img, _receive_data.my_color);
     draw_img_ = _src_img.clone();
-    // cv::imshow("auto aim-armor", _src_img);
     if (findLight())
     {
 
@@ -264,13 +259,13 @@ namespace basic_armor
             armor_config_.armor_edit == 1 ||
             light_config_.light_edit == 1)
         {
-#ifndef RELEASE
-          cv::imshow("auto aim-armor", draw_img_);
-#endif
-
+          if (armor_config_.debug_mode == 1)
+          {
+            cv::imshow("basic_armor", draw_img_);
+            cv::waitKey(30);
+          }
           draw_img_ = cv::Mat::zeros(_src_img.size(), CV_8UC3);
         }
-
         return true;
       }
     }
@@ -279,10 +274,11 @@ namespace basic_armor
         armor_config_.armor_edit == 1 ||
         light_config_.light_edit == 1)
     {
-#ifndef RELEASE
-      cv::imshow("auto aim-armor", draw_img_);
-#endif
-
+      if (armor_config_.debug_mode == 1)
+      {
+        cv::imshow("basic_armor", draw_img_);
+        cv::waitKey(30);
+      }
       draw_img_ = cv::Mat::zeros(_src_img.size(), CV_8UC3);
     }
     return false;
@@ -327,9 +323,11 @@ namespace basic_armor
           if (armor_config_.armor_draw == 1 || light_config_.light_draw == 1 ||
               armor_config_.armor_edit == 1 || light_config_.light_edit == 1)
           {
-#ifndef RELEASE
-            cv::imshow("auto aim-armor", draw_img_);
-#endif
+            if (armor_config_.debug_mode == 1)
+            {
+              cv::imshow("sentry_armor", draw_img_);
+              cv::waitKey(30);
+            }
             draw_img_ = cv::Mat::zeros(_src_img.size(), CV_8UC3);
           }
           return true;
@@ -340,11 +338,10 @@ namespace basic_armor
           armor_config_.armor_edit == 1 ||
           light_config_.light_edit == 1)
       {
-
-#ifndef RELEASE
-        cv::imshow("[basic_armor] getWriteData() -> draw_img_", draw_img_);
-#endif
-
+        if (armor_config_.debug_mode == 1)
+        {
+          cv::imshow("[basic_armor] getWriteData() -> draw_img_", draw_img_);
+        }
         draw_img_ = cv::Mat::zeros(_src_img.size(), CV_8UC3);
       }
       return false;
@@ -368,19 +365,16 @@ namespace basic_armor
   {
     if (armor_config_.armor_forecast)
     {
-#ifndef RELEASE
-/*
-    std::string window_name = {"[basic_armor] sentryMode() -> sentry_trackbar"};
-    cv::namedWindow(window_name);
-    cv::createTrackbar("proportion_direction_", window_name, &proportion_direction_, 100, NULL);
-    cv::createTrackbar("forecast_size_", window_name, &forecast_size_, 10000, NULL);
-    cv::createTrackbar("forecast_max_size_", window_name, &forecast_max_size_, 100, NULL);
-    cv::createTrackbar("judge_direction_", window_name, &judge_direction_, 100, NULL);
-    cv::createTrackbar("abrupt_variable_", window_name, &abrupt_variable_, 500, NULL);
-    cv::createTrackbar("Q", window_name, &Q_, 100, NULL);
-    cv::createTrackbar("R", window_name, &R_, 100, NULL);
-    cv::imshow(window_name, sentry_trackbar_);*/
-#endif
+      std::string window_name = {"[basic_armor] sentryMode() -> sentry_trackbar"};
+      cv::namedWindow(window_name);
+      cv::createTrackbar("proportion_direction_", window_name, &proportion_direction_, 100, NULL);
+      cv::createTrackbar("forecast_size_", window_name, &forecast_size_, 10000, NULL);
+      cv::createTrackbar("forecast_max_size_", window_name, &forecast_max_size_, 100, NULL);
+      cv::createTrackbar("judge_direction_", window_name, &judge_direction_, 100, NULL);
+      cv::createTrackbar("abrupt_variable_", window_name, &abrupt_variable_, 500, NULL);
+      cv::createTrackbar("Q", window_name, &Q_, 100, NULL);
+      cv::createTrackbar("R", window_name, &R_, 100, NULL);
+      cv::imshow(window_name, sentry_trackbar_);
     }
 
     num_cnt_++;
@@ -479,35 +473,32 @@ namespace basic_armor
   {
     if (armor_config_.armor_edit == 1)
     {
-#ifndef RELEASE
-/*
-    std::string window_name = {"[basic_armor] fittingArmor() -> armor_trackbar"};
-    cv::namedWindow(window_name);
 
-    cv::createTrackbar("light_height_aspect_min", window_name,
-                       &armor_config_.light_height_ratio_min, 100, NULL);
-    cv::createTrackbar("light_height_aspect_max", window_name,
-                       &armor_config_.light_height_ratio_max, 100, NULL);
-    cv::createTrackbar("light_width_aspect_min", window_name,
-                       &armor_config_.light_width_ratio_min, 100, NULL);
-    cv::createTrackbar("light_width_ratio_max", window_name,
-                       &armor_config_.light_width_ratio_max, 100, NULL);
-    cv::createTrackbar("light_y_different", window_name,
-                       &armor_config_.light_y_different, 100, NULL);
-    cv::createTrackbar("light_height_different", window_name,
-                       &armor_config_.light_height_different, 100, NULL);
-    cv::createTrackbar("armor_angle_different", window_name,
-                       &armor_config_.armor_angle_different, 100, NULL);
-    cv::createTrackbar("small_armor_aspect_min", window_name,
-                       &armor_config_.small_armor_aspect_min, 100, NULL);
-    cv::createTrackbar("armor_type_th", window_name,
-                       &armor_config_.armor_type_th, 100, NULL);
-    cv::createTrackbar("big_armor_aspect_max", window_name,
-                       &armor_config_.big_armor_aspect_max, 100, NULL);
+      std::string window_name = {"[basic_armor] fittingArmor() -> armor_trackbar"};
+      cv::namedWindow(window_name);
 
-    cv::imshow(window_name, armor_trackbar_);
-    */
-#endif
+      cv::createTrackbar("light_height_aspect_min", window_name,
+                         &armor_config_.light_height_ratio_min, 100, NULL);
+      cv::createTrackbar("light_height_aspect_max", window_name,
+                         &armor_config_.light_height_ratio_max, 100, NULL);
+      cv::createTrackbar("light_width_aspect_min", window_name,
+                         &armor_config_.light_width_ratio_min, 100, NULL);
+      cv::createTrackbar("light_width_ratio_max", window_name,
+                         &armor_config_.light_width_ratio_max, 100, NULL);
+      cv::createTrackbar("light_y_different", window_name,
+                         &armor_config_.light_y_different, 100, NULL);
+      cv::createTrackbar("light_height_different", window_name,
+                         &armor_config_.light_height_different, 100, NULL);
+      cv::createTrackbar("armor_angle_different", window_name,
+                         &armor_config_.armor_angle_different, 100, NULL);
+      cv::createTrackbar("small_armor_aspect_min", window_name,
+                         &armor_config_.small_armor_aspect_min, 100, NULL);
+      cv::createTrackbar("armor_type_th", window_name,
+                         &armor_config_.armor_type_th, 100, NULL);
+      cv::createTrackbar("big_armor_aspect_max", window_name,
+                         &armor_config_.big_armor_aspect_max, 100, NULL);
+
+      cv::imshow(window_name, armor_trackbar_);
     }
     for (size_t i = 0; i != light_.size(); ++i)
     {
@@ -718,24 +709,19 @@ namespace basic_armor
                                         const int _my_color)
   {
     cv::cvtColor(_src_img, gray_img_, cv::COLOR_BGR2GRAY);
-
-    // std::string window_name = {"[basic_armor] grayPretreat() -> gray_trackbar"};
+    std::string window_name = {"[basic_armor] grayPretreat() -> gray_trackbar"};
     switch (_my_color)
     {
     case uart::RED:
       // my_color 为红色，则处理蓝色的情况
       if (image_config_.gray_edit)
       {
-#ifndef RELEASE
-/*
+
         cv::namedWindow(window_name);
         cv::createTrackbar("blue_gray_th", window_name,
                            &image_config_.blue_armor_gray_th, 255, NULL);
         cv::imshow(window_name, gray_trackbar_);
-        */
-#endif
       }
-
       cv::threshold(gray_img_, bin_gray_img, image_config_.blue_armor_gray_th,
                     255, cv::THRESH_BINARY);
       break;
@@ -743,14 +729,10 @@ namespace basic_armor
       // my_color 为蓝色，则处理红色的情况
       if (image_config_.gray_edit)
       {
-#ifndef RELEASE
-/*
         cv::namedWindow(window_name);
         cv::createTrackbar("red_gray_th", window_name,
                            &image_config_.red_armor_gray_th, 255, NULL);
         cv::imshow(window_name, gray_trackbar_);
-        */
-#endif
       }
 
       cv::threshold(gray_img_, bin_gray_img, image_config_.red_armor_gray_th,
@@ -760,15 +742,12 @@ namespace basic_armor
       // my_color 为默认值，则处理红蓝双色的情况
       if (image_config_.gray_edit)
       {
-#ifndef RELEASE
-/*
         cv::namedWindow(window_name);
         cv::createTrackbar("red_gray_th", window_name,
                            &image_config_.red_armor_gray_th, 255, NULL);
         cv::createTrackbar("blue_gray_th", window_name,
                            &image_config_.blue_armor_gray_th, 255, NULL);
-        cv::imshow(window_name, gray_trackbar_);*/
-#endif
+        cv::imshow(window_name, gray_trackbar_);
       }
 
       cv::threshold(gray_img_, bin_red_gray_img,
@@ -779,13 +758,11 @@ namespace basic_armor
       break;
     }
 
-    if (image_config_.gray_edit)
+    if (image_config_.gray_edit && armor_config_.debug_mode)
     {
-#ifndef RELEASE
-      // cv::imshow(window_name, bin_gray_img);
-#endif
+      cv::imshow(window_name, bin_gray_img);
+      cv::waitKey(30);
     }
-
     return bin_gray_img;
   }
 
@@ -797,7 +774,7 @@ namespace basic_armor
 
     cv::split(_src_img, _split);
 
-    // std::string window_name = {"[basic_armor] brgPretreat() -> color_trackbar"};
+    std::string window_name = {"[basic_armor] brgPretreat() -> color_trackbar"};
     switch (_my_color)
     {
     case uart::RED:
@@ -807,13 +784,10 @@ namespace basic_armor
 
       if (image_config_.color_edit)
       {
-#ifndef RELEASE
-/*
-      cv::namedWindow(window_name);
-      cv::createTrackbar("blue_color_th", window_name,
-                         &image_config_.blue_armor_color_th, 255, NULL);
-      cv::imshow(window_name, this->bgr_trackbar_);*/
-#endif
+        cv::namedWindow(window_name);
+        cv::createTrackbar("blue_color_th", window_name,
+                           &image_config_.blue_armor_color_th, 255, NULL);
+        cv::imshow(window_name, this->bgr_trackbar_);
       }
 
       cv::threshold(bin_color_img, bin_color_img, image_config_.blue_armor_color_th, 255, cv::THRESH_BINARY);
@@ -828,13 +802,10 @@ namespace basic_armor
 
       if (image_config_.color_edit)
       {
-#ifndef RELEASE
-/*
-      cv::namedWindow(window_name);
-      cv::createTrackbar("red_color_th", window_name,
-                         &image_config_.red_armor_color_th, 255, NULL);
-      cv::imshow(window_name, this->bgr_trackbar_);*/
-#endif
+        cv::namedWindow(window_name);
+        cv::createTrackbar("red_color_th", window_name,
+                           &image_config_.red_armor_color_th, 255, NULL);
+        cv::imshow(window_name, this->bgr_trackbar_);
       }
 
       cv::threshold(bin_color_img, bin_color_img, image_config_.red_armor_color_th, 255, cv::THRESH_BINARY);
@@ -851,15 +822,12 @@ namespace basic_armor
 
       if (image_config_.color_edit)
       {
-#ifndef RELEASE
-/*
-      cv::namedWindow(window_name);
-      cv::createTrackbar("red_color_th", window_name,
-                         &image_config_.red_armor_color_th, 255, NULL);
-      cv::createTrackbar("blue_color_th", window_name,
-                         &image_config_.blue_armor_color_th, 255, NULL);
-      cv::imshow(window_name, this->bgr_trackbar_);*/
-#endif
+        cv::namedWindow(window_name);
+        cv::createTrackbar("red_color_th", window_name,
+                           &image_config_.red_armor_color_th, 255, NULL);
+        cv::createTrackbar("blue_color_th", window_name,
+                           &image_config_.blue_armor_color_th, 255, NULL);
+        cv::imshow(window_name, this->bgr_trackbar_);
       }
       cv::threshold(bin_blue_color_img, bin_blue_color_img, image_config_.blue_armor_color_th, 255, cv::THRESH_BINARY);
       cv::threshold(bin_blue_green_img, bin_blue_green_img, image_config_.green_armor_color_th, 255, cv::THRESH_BINARY);
@@ -871,13 +839,11 @@ namespace basic_armor
       break;
     }
 
-    if (image_config_.color_edit)
+    if (image_config_.color_edit && armor_config_.debug_mode)
     {
-#ifndef RELEASE
-      // cv::imshow(window_name, bin_color_img);
-#endif
+      cv::imshow(window_name, bin_color_img);
+      cv::waitKey(30);
     }
-
     return bin_color_img;
   }
 
@@ -885,15 +851,13 @@ namespace basic_armor
                                        const int _my_color)
   {
     cv::cvtColor(_src_img, hsv_img, cv::COLOR_BGR2HSV_FULL);
-    // std::string window_name = {"[basic_armor] hsvPretreat() -> hsv_trackbar"};
+    std::string window_name = {"[basic_armor] hsvPretreat() -> hsv_trackbar"};
     switch (_my_color)
     {
     // my_color 为红色，则处理蓝色的情况
     case uart::RED:
       if (image_config_.color_edit)
       {
-#ifndef RELEASE
-/*
         cv::namedWindow(window_name);
         cv::createTrackbar("blue_h_min:", window_name,
                            &image_config_.h_blue_min, 255, NULL);
@@ -907,8 +871,7 @@ namespace basic_armor
                            &image_config_.v_blue_min, 255, NULL);
         cv::createTrackbar("blue_v_max:", window_name,
                            &image_config_.v_red_max, 255, NULL);
-        cv::imshow(window_name, this->hsv_trackbar_);*/
-#endif
+        cv::imshow(window_name, this->hsv_trackbar_);
       }
 
       cv::inRange(hsv_img,
@@ -924,8 +887,6 @@ namespace basic_armor
       // my_color 为蓝色，则处理红色的情况
       if (image_config_.color_edit)
       {
-#ifndef RELEASE
-/*
         cv::namedWindow("hsv_trackbar");
         cv::createTrackbar("red_h_min:", window_name,
                            &image_config_.h_red_min, 255, NULL);
@@ -939,10 +900,8 @@ namespace basic_armor
                            &image_config_.v_red_min, 255, NULL);
         cv::createTrackbar("red_v_max:", window_name,
                            &image_config_.v_red_max, 255, NULL);
-        cv::imshow(window_name, hsv_trackbar_);*/
-#endif
+        cv::imshow(window_name, hsv_trackbar_);
       }
-
       cv::inRange(hsv_img,
                   cv::Scalar(image_config_.h_red_min,
                              image_config_.s_red_min,
@@ -956,8 +915,6 @@ namespace basic_armor
       // my_color 为默认值，则处理红蓝双色的情况
       if (image_config_.color_edit)
       {
-#ifndef RELEASE
-/*
         cv::namedWindow("hsv_trackbar");
         cv::createTrackbar("red_h_min:", window_name,
                            &image_config_.h_red_min, 255, NULL);
@@ -985,8 +942,7 @@ namespace basic_armor
         cv::createTrackbar("blue_v_max:", window_name, &image_config_.v_red_max,
                            255, NULL);
 
-        cv::imshow(window_name, hsv_trackbar_);*/
-#endif
+        cv::imshow(window_name, hsv_trackbar_);
       }
 
       cv::inRange(hsv_img,
@@ -1011,11 +967,10 @@ namespace basic_armor
       break;
     }
 
-    if (image_config_.gray_edit)
+    if (image_config_.gray_edit&&armor_config_.debug_mode)
     {
-#ifndef RELEASE
-      // cv::imshow(window_name, bin_color_img);
-#endif
+      cv::imshow(window_name, bin_color_img);
+      cv::waitKey(30);
     }
 
     return bin_color_img;
