@@ -18,7 +18,7 @@ beta 0.1
 
 OpenCV(4.5.5)
 
-[fmt]([fmtlib/fmt: A modern formatting library - https://github.com/](https://github.com/fmtlib/fmt))
+[fmt](https://github.com/fmtlib/fmt)
 
 [mindvision 工业相机 SDK](https://pan.baidu.com/s/1CHb8mEZtElr9zUweLXUcmA) 提取码 rm24
 
