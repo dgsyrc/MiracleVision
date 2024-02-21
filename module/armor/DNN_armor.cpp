@@ -10,24 +10,72 @@ namespace DNN_armor
         config_read["WIDTH"] >> DNN_Config_.width;
     }
 
-    DNN_Model::DNN_Model(std::string input_path)
+    void DNN_Dectect::Detect(cv::Mat &src_img, DNN_Model &model)
     {
-        DNN_Model::load(input_path);
-        DNN_Model::layers();
+        img = src_img;
+        // input_tensor = prepareInput(img, DNN_Config_.width, DNN_Config_.height);
+        Ort::Value input_tensor = prepare_input(src_img);
+        std::vector<const char *> input_names = {"input"};
+        std::vector<const char *> output_names = {"output"};
+        output = model.session.Run(Ort::RunOptions{nullptr}, input_names.data(), &input_tensor, 1, output_names.data(), 1);
+        std::vector<Ort::Value> squeezed_tensor;
+
+        for (size_t i = 1; i < output.size(); ++i)
+        {
+            squeezed_tensor.push_back(output[i]);
+        }
+        
+    }
+    Ort::Value DNN_Dectect::prepare_input(cv::Mat &bgr_image)
+    {
+        std::vector<int64_t> input_shape = {1, 3, DNN_Config_.height, DNN_Config_.width};
+        cv::Mat image;
+        cv::cvtColor(bgr_image, image, cv::COLOR_BGR2RGB);
+        cv::resize(image, image, cv::Size(DNN_Config_.width, DNN_Config_.height));
+        image.convertTo(image, CV_32FC3, 1.0 / 255.0);
+        std::vector<float> input_data;
+        image.forEach<cv::Vec3f>([&](cv::Vec3f &pixel, const int *position)
+                                 {
+        input_data.push_back(pixel[0]);
+        input_data.push_back(pixel[1]);
+        input_data.push_back(pixel[2]); });
+        Ort::MemoryInfo memory_info = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
+        Ort::Value input_tensor = Ort::Value::CreateTensor<float>(memory_info, input_data.data(), input_data.size(), input_shape.data(), 4);
+        return input_tensor;
     }
 
-    inline void DNN_Model::load(std::string onnx_model_path)
+    float DNN_Dectect::iou(std::vector<float> &rec_1, std::vector<float> &rec_2)
     {
-        Ort::Env env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "PoseEstimate");
-        Ort::SessionOptions session_options;
-        session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
-        Ort::AllocatorWithDefaultOptions allocator;
-        model_path = onnx_model_path;
-        Ort::Session session(env, model_path.c_str(), session_options);
-        fmt::print("[{}] Load Success, the model is: {}\n", idntifier, model_path);
-        Ort::MemoryInfo memory_info = Ort::MemoryInfo::CreateCpu(OrtAllocatorType::OrtArenaAllocator, OrtMemType::OrtMemTypeDefault);
-        printModelInfo(session, allocator);
+        float s_rec1 = (rec_1[2] - rec_1[0]) * (rec_1[3] - rec_1[1]);
+        float s_rec2 = (rec_2[2] - rec_2[0]) * (rec_2[3] - rec_2[1]);
+        float sum_s = s_rec1 + s_rec2;
+        float left = std::max(rec_1[0], rec_2[0]);
+        float right = std::min(rec_1[2], rec_2[2]);
+        float bottom = std::max(rec_1[1], rec_2[1]);
+        float top = std::min(rec_1[3], rec_2[3]);
+
+        if (left >= right || top <= bottom)
+        {
+            return 0.0;
+        }
+        else
+        {
+            float inter = (right - left) * (top - bottom);
+            float iou = (inter / (sum_s - inter)) * 1.0;
+            return iou;
+        }
     }
+
+    cv::Mat DNN_Dectect::prepareInput(cv::Mat &src_img, int width, int height)
+    {
+        cv::Mat tmp_img;
+        cv::cvtColor(src_img, tmp_img, cv::COLOR_BGR2RGB);
+        cv::resize(tmp_img, tmp_img, cv::Size2f(width, height));
+        tmp_img = tmp_img / 255.0;
+        tmp_img = cv::dnn::blobFromImage(tmp_img);
+        return tmp_img;
+    }
+
     void DNN_Model::printModelInfo(Ort::Session &session, Ort::AllocatorWithDefaultOptions &allocator)
     {
         // 输出模型输入节点的数量
@@ -58,8 +106,5 @@ namespace DNN_armor
         for (auto i = 0; i < num_output_nodes; i++)
             fmt::print("[{}] The output op-name {} is: {}\n", idntifier, i, *session.GetOutputNameAllocated(i, allocator));
         // input_dims_2[0] = input_dims_1[0] = output_dims[0] = 1;//batch size = 1
-    }
-    inline void DNN_Model::layers(void)
-    {
     }
 }
