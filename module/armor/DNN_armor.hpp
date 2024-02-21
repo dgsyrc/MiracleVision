@@ -29,5 +29,11 @@ namespace DNN_armor
     {
     public:
         DNN_Model(std::string input_path);
+        inline void load(std::string onnx_model_path);
+        inline void layers(void);
+
+    private:
+        cv::dnn::Net opencv_net;
+        std::string model_path;
     };
 }

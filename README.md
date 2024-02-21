@@ -6,7 +6,66 @@ Iterate from RoboVision_Sirius(dgsyrc)
 2024/02/20
 beta 0.1
 
-# Document
+## Document
+
+### 部署
+
+#### 源代码仓库
+
+源代码仓库：[dgsyrc/MiracleVision: A robot vision project for RoboMaster - https://github.com/](https://github.com/dgsyrc/MiracleVision)
+
+#### 必要环境依赖
+
+OpenCV(4.5.5)
+
+[fmt]([fmtlib/fmt: A modern formatting library - https://github.com/](https://github.com/fmtlib/fmt))
+
+[mindvision 工业相机 SDK](https://pan.baidu.com/s/1CHb8mEZtElr9zUweLXUcmA) 提取码 rm24
+
+#### 安装
+
+先安装好OpenCV 4.5.5
+
+使用下列命令下载项目源码
+
+```
+git clone https://github.com/dgsyrc/MiracleVision.git
+```
+
+接着在 `MiracleVision/3rdparty` 下执行下列命令下载 `fmt` 库源码
+
+```
+git clone https://github.com/fmtlib/fmt.git
+```
+
+将下载好的工业相机SDK解压，在SDK文件夹下使用以下命令安装
+
+```
+sudo sh install.sh
+```
+
+在项目文件夹 `MiracleVision` 下新建文件夹 `build` 
+
+可使用以下命令（在 `MiracleVision` 下使用）
+
+```
+mkdir build
+```
+
+执行下列命令编译源码
+
+```
+cmake ..
+make -j12
+```
+
+其中 `-j12` 参数可选填，加了更快，但不建议大于12
+
+执行完成后，在 `build` 文件夹下执行以下命令运行
+
+```
+sudo ./bin/MiracleVision
+```
 
 ## serial communication
 
