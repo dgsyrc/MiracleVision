@@ -8,21 +8,14 @@
 -->
 <DEBUG_MODE>0</DEBUG_MODE>
 <!--
-  MAX_HEIGHT - 
+  HEIGHT - Model input height
 -->
-<MAX_HEIGHT>0</MAX_HEIGHT>
+<HEIGHT>640</HEIGHT>
 <!--
-  MIN_HEIGHT - 
+  WIDTH - Model input width
 -->
-<MIN_HEIGHT>0</MIN_HEIGHT>
-<!--
-  MAX_WIDTH - 
--->
-<MAX_WIDTH>0</MAX_WIDTH>
-<!--
-  MIN_WIDTH - 
--->
-<MIN_WIDTH>0</MIN_WIDTH>
+<WIDTH>640</WIDTH>
+
 
 
 </opencv_storage>

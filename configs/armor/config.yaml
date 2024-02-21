@@ -1,0 +1,56 @@
+# Ultralytics YOLO 🚀, AGPL-3.0 license
+# COCO128 dataset https://www.kaggle.com/ultralytics/coco128 (first 128 images from COCO train2017) by Ultralytics
+# Documentation: https://docs.ultralytics.com/datasets/detect/coco/
+# Example usage: yolo train data=coco128.yaml
+# parent
+# ├── ultralytics
+# └── datasets
+#     └── coco128  ← downloads here (7 MB)
+
+# Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
+path: D:/ProgramFiles/ultralytics-main/datasets/data_xn # dataset root dir
+train: images/train # train images (relative to 'path') 128 images
+val: images/test # val images (relative to 'path') 128 images
+test: # test images (optional)
+
+# Classes
+names:
+  0: bluesb
+  1: blue1
+  2: blue2
+  3: blue3
+  4: blue4
+  5: blue5
+  6: blue
+  7: NULL1
+  8: blue3v3
+  9: NULL2
+  10: red1
+  11: red2
+  12: red3
+  13: red4
+  14: red5v5
+  15: NULL3
+  16: NULL4
+  17: red5v5
+  18: NULL5
+  19: NULL6
+  20: NULL7
+  21: NULL8
+  22: NULL9
+  23: NULL10
+  24: NULL11
+  25: NULL12
+  26: NULL13
+  27: NULL14
+  28: NULL15
+  29: NULL16
+  30: NULL17
+  31: NULL18
+  32: NULL19
+  33: NULL20
+  34: NULL21
+  35: NULL22
+
+# Download script/URL (optional)
+#download: https://ultralytics.com/assets/coco128.zip

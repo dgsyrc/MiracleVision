@@ -12,6 +12,9 @@
 
 #include <opencv2/core.hpp>
 
+#include <onnxruntime/onnxruntime_cxx_api.h>
+#include <onnxruntime/onnxruntime_c_api.h>
+
 #include "devices/camera/mv_video_capture.hpp"
 #include "devices/serial/uart_serial.hpp"
 #include "module/armor/basic_armor.hpp"
@@ -24,7 +27,6 @@
 #include "module/camera/camera_calibration.hpp"
 #include "module/angle_solve/angle_solve.hpp"
 #include "module/buff/new_buff.hpp"
-
 
 #include <string>
 

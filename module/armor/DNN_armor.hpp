@@ -7,15 +7,17 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
+#include <onnxruntime/onnxruntime_cxx_api.h>
+#include <onnxruntime/onnxruntime_c_api.h>
+
 namespace DNN_armor
 {
+    auto idntifier = fmt::format(fg(fmt::color::green) | fmt::emphasis::bold, "DNN_INFO");
     struct DNN_Data
     {
         int debug_mode;
-        int max_height;
-        int min_height;
-        int max_width;
-        int min_width;
+        int height;
+        int width;
     };
     class DNN_Dectect
     {
@@ -31,9 +33,9 @@ namespace DNN_armor
         DNN_Model(std::string input_path);
         inline void load(std::string onnx_model_path);
         inline void layers(void);
+        void printModelInfo(Ort::Session &session, Ort::AllocatorWithDefaultOptions &allocator);
 
     private:
-        cv::dnn::Net opencv_net;
         std::string model_path;
     };
 }

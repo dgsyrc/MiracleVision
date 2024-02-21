@@ -37,6 +37,12 @@ find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 link_libraries(${OpenCV_LIBS})
 
+#onnxruntime
+set(ONNXRUNTIME_ROOT_PATH /usr/local)
+set(ONNXRUNTIME_INCLUDE_DIRS ${ONNXRUNTIME_ROOT_PATH}/include/onnxruntime
+                             ${ONNXRUNTIME_ROOT_PATH}/onnxruntime)
+set(ONNXRUNTIME_LIB ${ONNXRUNTIME_ROOT_PATH}/lib/libonnxruntime.so)
+
 # Add fmtlib directory
 add_subdirectory(3rdparty/fmt)
 # Add fmtlib include to EXTRA_INCLUDES
@@ -160,7 +166,7 @@ target_link_libraries(MiracleVision
     fmt::fmt
     ${OpenCV_LIBS}
     ${EXTRA_LIBS}
-
+    ${ONNXRUNTIME_LIB}
     PRIVATE
     ${MV_EXTRA_LIBS}
 )
