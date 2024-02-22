@@ -23,6 +23,7 @@ namespace DNN_armor
     {
         int x1, y1, x2, y2, label, prob;
     };
+    class DNN_Model;
     class DNN_Dectect
     {
     public:

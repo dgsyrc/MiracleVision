@@ -19,12 +19,15 @@ namespace DNN_armor
         std::vector<const char *> output_names = {"output"};
         output = model.session.Run(Ort::RunOptions{nullptr}, input_names.data(), &input_tensor, 1, output_names.data(), 1);
         std::vector<Ort::Value> squeezed_tensor;
-
-        for (size_t i = 1; i < output.size(); ++i)
+        std::vector<int64_t> tmp = output[1].GetTypeInfo().GetTensorTypeAndShapeInfo().GetShape();
+        fmt::print("\n[{}] output {} dim is: ", idntifier, 0);
+        for (auto j = 0; j < tmp.size(); j++)
+            std::cout << tmp[j] << " ";
+        printf("\n");
+        /*for (size_t i = 1; i < output.size(); ++i)
         {
             squeezed_tensor.push_back(output[i]);
-        }
-        
+        }*/
     }
     Ort::Value DNN_Dectect::prepare_input(cv::Mat &bgr_image)
     {
