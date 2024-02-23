@@ -119,6 +119,7 @@ int main()
       {
       // basic auto aim mode
       case uart::AUTO_AIM:
+        fmt::print("[{}] AUTO_AIM\n", idntifier);
         dnn_armor.Detect(src_img, dnn_model);
         if (basic_armor_.runBasicArmor(src_img, serial_.returnReceive()))
         {
