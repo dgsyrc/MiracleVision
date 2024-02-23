@@ -344,7 +344,7 @@ namespace uart
   {
     // cv::waitKey(50);
     receiveData();
-    fmt::print("[info] in 1\n");
+    //fmt::print("[info] in 1\n");
     if (!isEmpty())
     {
       if (pre_mode != receive_buff_[2])
@@ -359,7 +359,7 @@ namespace uart
     {
       return;
     }
-    fmt::print("[info] in 2\n");
+    //fmt::print("[info] in 2\n");
     switch (receive_buff_[1])
     {
     case RED:
