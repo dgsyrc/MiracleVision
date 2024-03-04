@@ -8,7 +8,7 @@
 #include "MiracleVision.hpp"
 
 // video debug mode
-// #define VIDEO_DEBUG
+#define VIDEO_DEBUG
 
 // auto fire
 #define MANUAL_FIRE
@@ -48,14 +48,14 @@ int main()
   basic_buff::Detector basic_buff_ = basic_buff::Detector(
       fmt::format("{}{}", CONFIG_FILE_PATH, "/buff/basic_buff_config.xml"));
 
-  // basic_pnp::PnP pnp_ = basic_pnp::PnP(fmt::format("{}{}", CONFIG_FILE_PATH, "/camera/mv_camera_config_407.xml"), fmt::format("{}{}", CONFIG_FILE_PATH, "/angle_solve/basic_pnp_config.xml"));
+  basic_pnp::PnP pnp_ = basic_pnp::PnP(fmt::format("{}{}", CONFIG_FILE_PATH, "/camera/mv_camera_config_407.xml"), fmt::format("{}{}", CONFIG_FILE_PATH, "/angle_solve/basic_pnp_config.xml"));
 
   // onnx_inferring::model model_ = onnx_inferring::model(fmt::format("{}{}", SOURCE_PATH, "/module/ml/mnist-8.onnx"));
   Ort::Env env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "PoseEstimate");
   Ort::SessionOptions session_options;
   session_options.SetGraphOptimizationLevel(GraphOptimizationLevel::ORT_ENABLE_ALL);
-  
-  DNN_armor::DNN_Model dnn_model = DNN_armor::DNN_Model(fmt::format("{}{}", SOURCE_PATH, "/module/armor/yolov8.onnx"),env,session_options);
+
+  DNN_armor::DNN_Model dnn_model = DNN_armor::DNN_Model(fmt::format("{}{}", SOURCE_PATH, "/module/armor/yolov8.onnx"), env, session_options);
   DNN_armor::DNN_Dectect dnn_armor = DNN_armor::DNN_Dectect(fmt::format("{}{}", CONFIG_FILE_PATH, "/armor/DNN_armor_config.xml"));
 
   angle_solve::solve solution;
@@ -115,7 +115,7 @@ int main()
       fire = false;
       serial_.updateReceiveInformation();
       fmt::print("[MODE] {}\n", serial_.returnReceiveMode());
-      switch (serial_.returnReceiveMode())
+      switch (/*serial_.returnReceiveMode()*/ 1)
       {
       // basic auto aim mode
       case uart::AUTO_AIM:

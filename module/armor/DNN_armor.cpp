@@ -13,17 +13,21 @@ namespace DNN_armor
     void DNN_Dectect::Detect(cv::Mat &src_img, DNN_Model &model)
     {
         img = src_img;
+        fmt::print("\n[{}] This\n", idntifier);
         // input_tensor = prepareInput(img, DNN_Config_.width, DNN_Config_.height);
-        Ort::Value input_tensor = prepare_input(src_img);
+        cv::Mat input_tensor = prepareInput(src_img, DNN_Config_.width, DNN_Config_.height);
+        fmt::print("\n[{}] This\n", idntifier);
         std::vector<const char *> input_names = {"input"};
         std::vector<const char *> output_names = {"output"};
-        output = model.session.Run(Ort::RunOptions{nullptr}, input_names.data(), &input_tensor, 1, output_names.data(), 1);
+        // Ort::Value ort_input_tensor = ;
+        // output = model.session.Run(Ort::RunOptions{nullptr}, input_names.data(), ort_input_tensor, 1, output_names.data(), 1);
         std::vector<Ort::Value> squeezed_tensor;
         std::vector<int64_t> tmp = output[1].GetTypeInfo().GetTensorTypeAndShapeInfo().GetShape();
         fmt::print("\n[{}] output {} dim is: ", idntifier, 0);
         for (auto j = 0; j < tmp.size(); j++)
             std::cout << tmp[j] << " ";
         printf("\n");
+        fmt::print("\n[{}] This\n", idntifier);
         /*for (size_t i = 1; i < output.size(); ++i)
         {
             squeezed_tensor.push_back(output[i]);

@@ -16,15 +16,19 @@ beta 0.1
 
 #### 必要环境依赖
 
-OpenCV(4.5.5)
+[opencv(4.5.5)](https://github.com/opencv/opencv)
+
+[opencv_contrib(4.5.5)](https://github.com/opencv/opencv_contrib)
 
 [fmt](https://github.com/fmtlib/fmt)
 
 [mindvision 工业相机 SDK](https://pan.baidu.com/s/1CHb8mEZtElr9zUweLXUcmA) 提取码 rm24
 
+[onnxruntime](https://github.com/microsoft/onnxruntime)
+
 #### 安装
 
-先安装好OpenCV 4.5.5
+先安装好opencv & opencv_contrib 4.5.5以及onnxruntime
 
 使用下列命令下载项目源码
 

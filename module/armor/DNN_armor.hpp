@@ -37,6 +37,7 @@ namespace DNN_armor
         DNN_Data DNN_Config_;
         cv::Mat img;
         std::vector<Ort::Value> output;
+        
     };
     class DNN_Model
     {
