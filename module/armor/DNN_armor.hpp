@@ -4,6 +4,7 @@
 #include <fmt/core.h>
 
 #include <string>
+#include <vector>
 #include <iostream>
 #include <opencv2/opencv.hpp>
 
@@ -37,7 +38,6 @@ namespace DNN_armor
         DNN_Data DNN_Config_;
         cv::Mat img;
         std::vector<Ort::Value> output;
-        
     };
     class DNN_Model
     {
@@ -55,5 +55,62 @@ namespace DNN_armor
         Ort::Session session;
         std::string model_path;
         Ort::AllocatorWithDefaultOptions allocator;
+    };
+
+    class DNN_Model_CV
+    {
+    public:
+        DNN_Model_CV(std::string input_path);
+        void Init(std::string onnx_model_path);
+        struct DNN_Data
+        {
+            int debug_mode;
+            int height;
+            int width;
+            float mean_vals[3];
+            float norm_vals[3];
+        };
+
+        DNN_Data DNN_Config_;
+        cv::dnn::Net net;
+
+    private:
+        std::string onnx_path;
+    };
+
+    class DNN_Detect_CV
+    {
+    public:
+        DNN_Detect_CV();
+        void Detect(cv::Mat &src_img, DNN_Model_CV &model);
+        cv::Mat imgResize(cv::Mat &src_img, DNN_Model_CV &model);
+
+        struct Object
+        {
+            cv::Rect_<float> rect;
+            int label;
+            float prob;
+        };
+
+        
+
+        inline float
+        min(float x, float y)
+        {
+            return (x < y) ? x : y;
+        }
+
+        struct Object
+        {
+            cv::Rect_<float> rect;
+            int label;
+            float prob;
+        };
+
+
+    private:
+        int num_grid;
+        int num_class;
+        void generate_yolox_proposals(const float *feat_ptr, std::vector<Object> &objects);
     };
 }

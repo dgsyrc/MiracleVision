@@ -7,14 +7,47 @@
   - 0 Disable
 -->
 <DEBUG_MODE>0</DEBUG_MODE>
+
 <!--
   HEIGHT - Model input height
 -->
 <HEIGHT>640</HEIGHT>
+
 <!--
   WIDTH - Model input width
 -->
 <WIDTH>640</WIDTH>
+
+<!--
+  MEAN0 - Model dim 1 mean val
+-->
+<MEAN0>0.485</MEAN0>
+
+<!--
+  MEAN1 - Model dim 2 mean val
+-->
+<MEAN1>0.456</MEAN1>
+
+<!--
+  MEAN2 - Model dim 3 mean val
+-->
+<MEAN2>0.406</MEAN2>
+
+<!--
+  NORM0 - Model dim 1 norm val
+-->
+<NORM0>0.229</NORM0>
+
+<!--
+  NORM1 - Model dim 2 norm val
+-->
+<NORM1>0.224</NORM1>
+
+<!--
+  NORM2 - Model dim 3 norm val
+-->
+<NORM2>0.225</NORM2>
+
 
 
 

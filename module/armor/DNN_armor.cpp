@@ -22,7 +22,10 @@ namespace DNN_armor
         // Ort::Value ort_input_tensor = ;
         // output = model.session.Run(Ort::RunOptions{nullptr}, input_names.data(), ort_input_tensor, 1, output_names.data(), 1);
         std::vector<Ort::Value> squeezed_tensor;
+        fmt::print("\n[{}] This 2\n", idntifier);
+
         std::vector<int64_t> tmp = output[1].GetTypeInfo().GetTensorTypeAndShapeInfo().GetShape();
+
         fmt::print("\n[{}] output {} dim is: ", idntifier, 0);
         for (auto j = 0; j < tmp.size(); j++)
             std::cout << tmp[j] << " ";
@@ -113,5 +116,68 @@ namespace DNN_armor
         for (auto i = 0; i < num_output_nodes; i++)
             fmt::print("[{}] The output op-name {} is: {}\n", idntifier, i, *session.GetOutputNameAllocated(i, allocator));
         // input_dims_2[0] = input_dims_1[0] = output_dims[0] = 1;//batch size = 1
+    }
+
+    DNN_Model_CV::DNN_Model_CV(std::string input_path)
+    {
+        cv::FileStorage config_read(input_path, cv::FileStorage::READ);
+        config_read["DEBUG_MODE"] >> DNN_Config_.debug_mode;
+        config_read["HEIGHT"] >> DNN_Config_.height;
+        config_read["WIDTH"] >> DNN_Config_.width;
+        config_read["MEAN0"] >> DNN_Config_.mean_vals[0];
+        config_read["MEAN1"] >> DNN_Config_.mean_vals[1];
+        config_read["MEAN2"] >> DNN_Config_.mean_vals[2];
+        config_read["NORM0"] >> DNN_Config_.norm_vals[0];
+        config_read["NORM1"] >> DNN_Config_.norm_vals[1];
+        config_read["NORM2"] >> DNN_Config_.norm_vals[2];
+    }
+
+    void DNN_Model_CV::Init(std::string onnx_model_path)
+    {
+        onnx_path = onnx_model_path;
+        net = cv::dnn::readNet(onnx_path);
+    }
+
+    void DNN_Detect_CV::Detect(cv::Mat &src_img, DNN_Model_CV &model)
+    {
+        float r = min(model.DNN_Config_.width / (src_img.cols * 1.0), model.DNN_Config_.height / (src_img.rows * 1.0));
+        cv::Mat img = imgResize(src_img, model);
+        for (int i = 0; i < img.rows; i++)
+        {
+            float *pdata = (float *)(img.data + i * img.step);
+            for (int j = 0; j < img.cols; ++j)
+            {
+                pdata[0] = (pdata[2] / 255.0 - model.DNN_Config_.mean_vals[0]) / model.DNN_Config_.norm_vals[0];
+                pdata[1] = (pdata[1] / 255.0 - model.DNN_Config_.mean_vals[1]) / model.DNN_Config_.norm_vals[1];
+                pdata[2] = (pdata[0] / 255.0 - model.DNN_Config_.mean_vals[2]) / model.DNN_Config_.norm_vals[2];
+                pdata += 3;
+            }
+        }
+        cv::Mat blob = cv::dnn::blobFromImage(img);
+        model.net.setInput(blob);
+        std::vector<cv::Mat> outs;
+        model.net.forward(outs, model.net.getUnconnectedOutLayersNames());
+        num_grid = outs[0].size[1];
+        num_class = outs[0].size[2];
+        const float *out = (float *)outs[0].data;
+        std::vector<Object> proposals;
+
+    }
+
+    cv::Mat DNN_Detect_CV::imgResize(cv::Mat &src_img, DNN_Model_CV &model)
+    {
+        float r = min(model.DNN_Config_.width / (src_img.cols * 1.0), model.DNN_Config_.height / (src_img.rows * 1.0));
+        int unpad_w = r * src_img.cols;
+        int unpad_h = r * src_img.rows;
+        cv::Mat re(unpad_h, unpad_w, CV_8UC3);
+        cv::resize(src_img, re, re.size());
+        cv::Mat out(model.DNN_Config_.height, model.DNN_Config_.width, CV_8UC3, cv::Scalar(114, 114, 114));
+        re.copyTo(out(cv::Rect(0, 0, re.cols, re.rows)));
+        return out;
+    }
+
+    void DNN_Detect_CV::generate_yolox_proposals(const float *feat_ptr, std::vector<Object> &objects)
+    {
+        
     }
 }
