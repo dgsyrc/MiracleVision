@@ -85,17 +85,10 @@ namespace DNN_armor
         void Detect(cv::Mat &src_img, DNN_Model_CV &model);
         cv::Mat imgResize(cv::Mat &src_img, DNN_Model_CV &model);
 
-        struct Object
-        {
-            cv::Rect_<float> rect;
-            int label;
-            float prob;
-        };
 
         
 
-        inline float
-        min(float x, float y)
+        inline float min(float x, float y)
         {
             return (x < y) ? x : y;
         }
