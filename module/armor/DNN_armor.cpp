@@ -178,6 +178,6 @@ namespace DNN_armor
 
     void DNN_Detect_CV::generate_yolox_proposals(const float *feat_ptr, std::vector<Object> &objects)
     {
-        
+        //cv::dnn::blobFromImage()
     }
 }
