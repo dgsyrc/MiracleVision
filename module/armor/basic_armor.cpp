@@ -261,6 +261,7 @@ namespace basic_armor
             armor_config_.armor_edit == 1 ||
             light_config_.light_edit == 1)
         {
+          fmt::print("[{}] {}\n",idntifier_red,armor_data_.width*armor_data_.height);
           if (armor_config_.debug_mode == 1)
           {
 
@@ -537,7 +538,7 @@ namespace basic_armor
             {
               // 储存装甲板
               // cv::line(draw_img_, armor_data_.right_light, vertex[(l + 1) % 4], cv::Scalar(0, 255, 255), 3, 8);
-              if (armor_data_.height * armor_data_.width > 30.0)
+              if (armor_data_.height * armor_data_.width > 120.0)
               {
                 armor_.push_back(armor_data_);
                 if (armor_config_.armor_draw == 1 ||
