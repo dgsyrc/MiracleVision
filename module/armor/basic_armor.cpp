@@ -537,12 +537,15 @@ namespace basic_armor
             {
               // 储存装甲板
               // cv::line(draw_img_, armor_data_.right_light, vertex[(l + 1) % 4], cv::Scalar(0, 255, 255), 3, 8);
-              armor_.push_back(armor_data_);
-              if (armor_config_.armor_draw == 1 ||
-                  armor_config_.armor_edit == 1)
+              if (armor_data_.height * armor_data_.width > 30.0)
               {
-                rectangle(draw_img_, armor_data_.armor_rect.boundingRect(),
-                          cv::Scalar(255, 255, 0), 5, 8);
+                armor_.push_back(armor_data_);
+                if (armor_config_.armor_draw == 1 ||
+                    armor_config_.armor_edit == 1)
+                {
+                  rectangle(draw_img_, armor_data_.armor_rect.boundingRect(),
+                            cv::Scalar(255, 255, 0), 5, 8);
+                }
               }
             }
           }
