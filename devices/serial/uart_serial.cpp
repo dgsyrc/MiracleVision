@@ -360,6 +360,7 @@ namespace uart
       return;
     }
     //fmt::print("[info] in 2\n");
+    //receive_buff_[1] = RED;
     switch (receive_buff_[1])
     {
     case RED:

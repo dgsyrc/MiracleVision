@@ -168,10 +168,10 @@ namespace basic_armor
       return false;
     }
     // 调参开关
-    if (light_config_.light_edit == 1)
+    if (light_config_.light_edit == 1 && !light_config_.light_edit)
     {
       std::string window_name = {"[basic_armor] findLight() -> light_trackbar"};
-
+      light_config_.light_edit = true;
       cv::namedWindow(window_name);
 
       cv::createTrackbar("angle_min", window_name,
@@ -214,16 +214,19 @@ namespace basic_armor
       static float light_w_h = _h / _w;
       // 判断灯条的条件
       if (box.angle < light_config_.angle_max &&
-          box.angle > -light_config_.angle_min &&
+          box.angle > light_config_.angle_min &&
           light_w_h < light_config_.ratio_w_h_max &&
-          light_w_h > light_config_.ratio_w_h_min)
+          light_w_h > light_config_.ratio_w_h_min &&
+           box.size.height * box.size.width < 30000 &&
+           box.size.height * box.size.width > 400
+      )
       {
         light_.emplace_back(box);
         if (light_config_.light_draw == 1 || light_config_.light_edit == 1)
         {
           cv::Point2f vertex[4];
           box.points(vertex);
-
+          cv::putText(draw_img_, std::to_string((int)(box.angle)), {vertex[1].x, vertex[1].y - 5}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 255));
           for (size_t l = 0; l != 4; ++l)
           {
             cv::line(draw_img_, vertex[l], vertex[(l + 1) % 4], cv::Scalar(0, 255, 255), 3, 8);
@@ -246,7 +249,7 @@ namespace basic_armor
                                const uart::Receive_Data _receive_data)
   {
     // 预处理
-    runImage(_src_img, _receive_data.my_color);
+    runImage(_src_img, /*_receive_data.my_color*/ uart::BLUE);
     draw_img_ = _src_img.clone();
     if (findLight())
     {
@@ -475,10 +478,11 @@ namespace basic_armor
 
   bool Detector::fittingArmor()
   {
-    if (armor_config_.armor_edit == 1)
+    if (armor_config_.armor_edit && !armor_config_.armor_trackbar)
     {
 
       std::string window_name = {"[basic_armor] fittingArmor() -> armor_trackbar"};
+      armor_config_.armor_trackbar = true;
       cv::namedWindow(window_name);
 
       cv::createTrackbar("light_height_aspect_min", window_name,
@@ -504,6 +508,7 @@ namespace basic_armor
 
       cv::imshow(window_name, armor_trackbar_);
     }
+    std::cout << "PASS" << armor_config_.armor_edit << "\n";
     for (size_t i = 0; i != light_.size(); ++i)
     {
       for (size_t j = i + 1; j != light_.size(); ++j)
@@ -527,7 +532,7 @@ namespace basic_armor
         float error_angle =
             atan((light_[light_right].center.y - light_[light_left].center.y) /
                  (light_[light_right].center.x - light_[light_left].center.x));
-        if (error_angle < 10.f)
+        if (error_angle < 20.f)
         {
           armor_data_.tan_angle = atan(error_angle) * 180 / CV_PI;
           // 拟合装甲板条件判断
@@ -538,14 +543,17 @@ namespace basic_armor
             {
               // 储存装甲板
               // cv::line(draw_img_, armor_data_.right_light, vertex[(l + 1) % 4], cv::Scalar(0, 255, 255), 3, 8);
-              if (armor_data_.height * armor_data_.width > 250.0)
+              if (1 /*armor_data_.height * armor_data_.width > 250.0 && armor_data_.height * armor_data_.width < 8000.0*/)
               {
                 armor_.push_back(armor_data_);
                 if (armor_config_.armor_draw == 1 ||
                     armor_config_.armor_edit == 1)
                 {
+                  cv::Point2f vertices[4];
+                  armor_data_.armor_rect.points(vertices);
                   rectangle(draw_img_, armor_data_.armor_rect.boundingRect(),
-                            cv::Scalar(255, 255, 0), 5, 8);
+                            cv::Scalar(255, 200, 0), 5, 8);
+                  cv::putText(draw_img_, std::to_string((int)(armor_data_.height * armor_data_.width)), {vertices[1].x, vertices[1].y - 5}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
                 }
               }
             }
@@ -619,14 +627,17 @@ namespace basic_armor
                 getDistance(armor_data_.armor_rect.center,
                             cv::Point(draw_img_.cols, draw_img_.rows));
             // 小装甲板比例范围
-            /*if (armor_data_.aspect_ratio > armor_config_.small_armor_aspect_min * 0.1 && armor_data_.aspect_ratio < armor_config_.armor_type_th * 0.1) {
+            if (armor_data_.aspect_ratio > armor_config_.small_armor_aspect_min * 0.1 && armor_data_.aspect_ratio < armor_config_.armor_type_th * 0.1)
+            {
               armor_data_.distinguish = 0;
               return true;
-            // 大装甲板比例范围
-            } else if (armor_data_.aspect_ratio > armor_config_.armor_type_th * 0.1 && armor_data_.aspect_ratio < armor_config_.big_armor_aspect_max * 0.1) {
+              // 大装甲板比例范围
+            }
+            else if (armor_data_.aspect_ratio > armor_config_.armor_type_th * 0.1 && armor_data_.aspect_ratio < armor_config_.big_armor_aspect_max * 0.1)
+            {
               armor_data_.distinguish = 1;
               return true;
-            }*/
+            }
             return true;
           }
         }
@@ -651,7 +662,9 @@ namespace basic_armor
                         cv::Size(armor_data_.width - (armor_data_.left_light_width + armor_data_.right_light_width),
                                  ((armor_data_.left_light_height + armor_data_.right_light_height) / 2)),
                         armor_data_.tan_angle);
-    cv::rectangle(draw_img_, rects.boundingRect(), cv::Scalar(255, 0, 0), 3, 8);
+    cv::rectangle(draw_img_, rects.boundingRect(), cv::Scalar(255, 0, 100), 3, 8);
+    cv::Point2f vertices[4];
+    rects.points(vertices);
 
     armor_data_.armor_rect = rects;
     cv::Rect _rect = rects.boundingRect();
@@ -675,7 +688,7 @@ namespace basic_armor
     // 计算颜色平均强度
     static cv::Mat roi = bin_gray_img(_rect);
     int average_intensity = static_cast<int>(mean(roi).val[0]);
-
+    cv::putText(draw_img_, std::to_string(average_intensity), {vertices[0].x, vertices[0].y + 100}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
     return average_intensity;
   }
 
@@ -721,10 +734,10 @@ namespace basic_armor
     {
     case uart::RED:
       // my_color 为红色，则处理蓝色的情况
-      if (image_config_.gray_edit)
+      if (image_config_.gray_edit && !image_config_.gray_trackbar)
       {
-
         cv::namedWindow(window_name);
+        image_config_.gray_trackbar = true;
         cv::createTrackbar("blue_gray_th", window_name,
                            &image_config_.blue_armor_gray_th, 255, NULL);
         cv::imshow(window_name, gray_trackbar_);
@@ -734,9 +747,10 @@ namespace basic_armor
       break;
     case uart::BLUE:
       // my_color 为蓝色，则处理红色的情况
-      if (image_config_.gray_edit)
+      if (image_config_.gray_edit && !image_config_.gray_trackbar)
       {
         cv::namedWindow(window_name);
+        image_config_.gray_trackbar = true;
         cv::createTrackbar("red_gray_th", window_name,
                            &image_config_.red_armor_gray_th, 255, NULL);
         cv::imshow(window_name, gray_trackbar_);
@@ -747,9 +761,10 @@ namespace basic_armor
       break;
     default:
       // my_color 为默认值，则处理红蓝双色的情况
-      if (image_config_.gray_edit)
+      if (image_config_.gray_edit && !image_config_.gray_trackbar)
       {
         cv::namedWindow(window_name);
+        image_config_.gray_trackbar = true;
         cv::createTrackbar("red_gray_th", window_name,
                            &image_config_.red_armor_gray_th, 255, NULL);
         cv::createTrackbar("blue_gray_th", window_name,
@@ -782,15 +797,17 @@ namespace basic_armor
     cv::split(_src_img, _split);
 
     std::string window_name = {"[basic_armor] brgPretreat() -> color_trackbar"};
+    
     switch (_my_color)
     {
     case uart::RED:
       // my_color 为红色，则处理蓝色的情况
       cv::subtract(_split[0], _split[2], bin_color_img);
       cv::subtract(_split[0], _split[1], bin_color_green_img);
-
-      if (image_config_.color_edit)
+      
+      if (image_config_.color_edit && !image_config_.bgr_trackbar)
       {
+        image_config_.bgr_trackbar = true;
         cv::namedWindow(window_name);
         cv::createTrackbar("blue_color_th", window_name,
                            &image_config_.blue_armor_color_th, 255, NULL);
@@ -806,9 +823,10 @@ namespace basic_armor
       // my_color 为蓝色，则处理红色的情况
       cv::subtract(_split[2], _split[0], bin_color_img);
       cv::subtract(_split[2], _split[1], bin_color_green_img);
-
-      if (image_config_.color_edit)
+      
+      if (image_config_.color_edit && !image_config_.bgr_trackbar)
       {
+        image_config_.bgr_trackbar = true;
         cv::namedWindow(window_name);
         cv::createTrackbar("red_color_th", window_name,
                            &image_config_.red_armor_color_th, 255, NULL);
@@ -827,8 +845,9 @@ namespace basic_armor
       cv::subtract(_split[2], _split[1], bin_red_green_img);
       cv::subtract(_split[0], _split[1], bin_blue_green_img);
 
-      if (image_config_.color_edit)
+      if (image_config_.color_edit && !image_config_.bgr_trackbar)
       {
+        image_config_.bgr_trackbar = true;
         cv::namedWindow(window_name);
         cv::createTrackbar("red_color_th", window_name,
                            &image_config_.red_armor_color_th, 255, NULL);
@@ -859,12 +878,14 @@ namespace basic_armor
   {
     cv::cvtColor(_src_img, hsv_img, cv::COLOR_BGR2HSV_FULL);
     std::string window_name = {"[basic_armor] hsvPretreat() -> hsv_trackbar"};
+    std::cout<<"AAAAAAAAAAAAAA "<<image_config_.hsv_trackbar<<image_config_.color_edit<<"\n";
     switch (_my_color)
     {
     // my_color 为红色，则处理蓝色的情况
     case uart::RED:
-      if (image_config_.color_edit)
+      if (image_config_.color_edit && !image_config_.hsv_trackbar)
       {
+        image_config_.hsv_trackbar = true;
         cv::namedWindow(window_name);
         cv::createTrackbar("blue_h_min:", window_name,
                            &image_config_.h_blue_min, 255, NULL);
@@ -878,7 +899,7 @@ namespace basic_armor
                            &image_config_.v_blue_min, 255, NULL);
         cv::createTrackbar("blue_v_max:", window_name,
                            &image_config_.v_red_max, 255, NULL);
-        cv::imshow(window_name, this->hsv_trackbar_);
+        cv::imshow(window_name, hsv_trackbar_);
       }
 
       cv::inRange(hsv_img,
@@ -892,9 +913,10 @@ namespace basic_armor
       break;
     case uart::BLUE:
       // my_color 为蓝色，则处理红色的情况
-      if (image_config_.color_edit)
+      if (image_config_.color_edit && !image_config_.hsv_trackbar)
       {
-        cv::namedWindow("hsv_trackbar");
+        image_config_.hsv_trackbar = true;
+        cv::namedWindow(window_name);
         cv::createTrackbar("red_h_min:", window_name,
                            &image_config_.h_red_min, 255, NULL);
         cv::createTrackbar("red_h_max:", window_name,
@@ -920,9 +942,10 @@ namespace basic_armor
       break;
     default:
       // my_color 为默认值，则处理红蓝双色的情况
-      if (image_config_.color_edit)
+      if (image_config_.color_edit && !image_config_.hsv_trackbar)
       {
-        cv::namedWindow("hsv_trackbar");
+        image_config_.hsv_trackbar = true;
+        cv::namedWindow(window_name);
         cv::createTrackbar("red_h_min:", window_name,
                            &image_config_.h_red_min, 255, NULL);
         cv::createTrackbar("red_h_max:", window_name,
@@ -974,7 +997,7 @@ namespace basic_armor
       break;
     }
 
-    if (image_config_.gray_edit && armor_config_.debug_mode)
+    if (image_config_.color_edit && armor_config_.debug_mode)
     {
       cv::imshow(window_name, bin_color_img);
       cv::waitKey(30);

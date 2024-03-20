@@ -102,6 +102,8 @@ int main()
     if (!src_img.empty())
     {
       src_img = src_img * 2; // increase brightness
+      //cv::imshow("[origin]", src_img);
+      //cv::waitKey(30);
 #ifndef RELEASE
       cv::imshow("[origin]", src_img);
       cv::waitKey(30);

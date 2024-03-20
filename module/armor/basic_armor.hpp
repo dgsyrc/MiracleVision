@@ -74,6 +74,8 @@ namespace basic_armor
     int small_armor_aspect_min;
     int armor_type_th;
     int big_armor_aspect_max;
+
+    int armor_trackbar = 0;
   };
 
   struct Light_Config
@@ -90,6 +92,8 @@ namespace basic_armor
     // 灯条周长范围
     int perimeter_max;
     int perimeter_min;
+
+    int light_trackbar = 0;
   };
 
   struct Image_Config
@@ -119,6 +123,10 @@ namespace basic_armor
     int gray_edit = 0;
     int color_edit = 0;
     int method = 0;
+
+    int gray_trackbar = 0;
+    int bgr_trackbar = 0;
+    int hsv_trackbar = 0;
   };
 
   class Detector
