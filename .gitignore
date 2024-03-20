@@ -4,3 +4,4 @@ bin/
 build/
 .vscode/
 3rdparty/fmt/
+CMakeCache.txt
