@@ -2,7 +2,6 @@
 
 #include <string>
 
-
 #include <fmt/core.h>
 #include <fmt/color.h>
 
@@ -12,7 +11,8 @@
 
 namespace tools
 {
-
+    auto err_idntifier = fmt::format(fg(fmt::color::red) | fmt::emphasis::bold, "ERROR");
+    auto rec_idntifier = fmt::format(fg(fmt::color::green) | fmt::emphasis::bold, "RecordInfo");
     class Tools
     {
     public:
@@ -49,9 +49,17 @@ namespace tools
             }
         }
 
-        static void recInit(std::string video_name)
+        static void recordInit(std::string video_name ,cv::VideoWriter &writer, cv::Size frame_size, int fps)
         {
-            
+            writer.open(video_name, cv::VideoWriter::fourcc('X', '2', '6', '4'), fps, frame_size);
+            if (!writer.isOpened())
+            {
+                fmt::print("[{}] Can't create video file\n", err_idntifier);
+            }
+            else
+            {
+                fmt::print("[{}] {}\n", rec_idntifier, video_name);
+            }
         }
     };
 };

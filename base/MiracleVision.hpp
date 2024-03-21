@@ -34,6 +34,9 @@
 #include <string>
 
 auto idntifier = fmt::format(fg(fmt::color::green) | fmt::emphasis::bold, "MiracleVision");
+
+int cap_fps;
+cv::VideoWriter writer;
 time_t time_now = time(0);
 bool fire;
 

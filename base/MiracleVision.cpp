@@ -99,19 +99,39 @@ int main()
     }
 #else
     cap_.read(src_img);
+
     cv::waitKey(30);
+    cv::Size frameSize(cap_.get(cv::CAP_PROP_FRAME_WIDTH), cap_.get(cv::CAP_PROP_FRAME_HEIGHT));
 #endif
     if (!src_img.empty())
     {
 #ifdef RECORD
       if (rec_cnt == 0)
       {
+        cap_fps = cap_.get(cv::CAP_PROP_FPS);
         std::stringstream tmp;
         tmp << std::put_time(std::localtime(&t), "%Y%m%d%H%M%S");
         std::string str_time = tmp.str();
-        // tools::Tools::recInit(fmt::format("{}.mp4", std::put_time(std::localtime(&t), "%y%m%d%H%M%S")));
-        cout << fmt::format("{}.mp4", str_time) << '\n';
+        std::string video_name = fmt::format("{}/video/record/{}.avi", SOURCE_PATH, str_time);
+        tools::Tools::recordInit(video_name, writer, frameSize, cap_fps);
+        writer.write(src_img);
+        rec_cnt++;
       }
+      else
+      {
+        if (rec_cnt > cap_fps * 60 * 1)
+        {
+          writer.write(src_img);
+          writer.release();
+          rec_cnt = 0;
+        }
+        else
+        {
+          writer.write(src_img);
+          rec_cnt++;
+        }
+      }
+      cout << "[REC] " << rec_cnt << ' ' << cap_fps << "\n";
 #endif
       // src_img = src_img * 2; // increase brightness
       // cv::imshow("[origin]", src_img);
