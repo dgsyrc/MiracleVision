@@ -8,7 +8,7 @@
 #include "MiracleVision.hpp"
 
 // video debug mode
-#define VIDEO_DEBUG
+// #define VIDEO_DEBUG
 #define RECORD
 
 // auto fire
@@ -74,7 +74,7 @@ int main()
   basic_roi::RoI save_roi;
   fps::FPS global_fps_;
   basic_roi::RoI roi_;
-
+  std::time_t st_time = std::time(nullptr);
   while (true)
   {
     auto t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -86,8 +86,8 @@ int main()
       // int i [[maybe_unused]] = std::system("reboot"); // camera disconnected -> reboot
     }
 #endif
-    global_fps_.getTick();
-    new_buff::new_buff_fps.getTick();
+    // global_fps_.getTick();
+    // new_buff::new_buff_fps.getTick();
 #ifndef VIDEO_DEBUG
     if (mv_capture_->isindustryimgInput())
     {
@@ -97,38 +97,63 @@ int main()
     {
       cap_.read(src_img);
     }
+    cv::Size frameSize = {src_img.cols, src_img.rows};
+    // cap_fps = cap_.get(cv::CAP_PROP_FPS);
+    //cap_fps = 30;
 #else
     cap_.read(src_img);
 
     cv::waitKey(30);
     cv::Size frameSize(cap_.get(cv::CAP_PROP_FRAME_WIDTH), cap_.get(cv::CAP_PROP_FRAME_HEIGHT));
+    cap_fps = cap_.get(cv::CAP_PROP_FPS);
 #endif
     if (!src_img.empty())
     {
+      //src_img = src_img * 2;
 #ifdef RECORD
-      if (rec_cnt == 0)
+      if (!test_fps && rec_cnt < 200)
       {
-        cap_fps = cap_.get(cv::CAP_PROP_FPS);
+        std::cout << rec_cnt << '\n';
+        rec_cnt++;
+        // continue;
+      }
+      else
+      {
+        if (!test_fps)
+        {
+          std::time_t ed_time = std::time(nullptr);
+          cap_fps = (int)(200.0 / (ed_time - st_time));
+          test_fps = true;
+          rec_cnt = 0;
+        }
+      }
+      cout << "A\n";
+      if (rec_cnt == 0 && test_fps)
+      {
         std::stringstream tmp;
         tmp << std::put_time(std::localtime(&t), "%Y%m%d%H%M%S");
         std::string str_time = tmp.str();
         std::string video_name = fmt::format("{}/video/record/{}.avi", SOURCE_PATH, str_time);
+        cout << frameSize.width << ' ' << frameSize.height << ' ' << cap_fps << '\n';
         tools::Tools::recordInit(video_name, writer, frameSize, cap_fps);
         writer.write(src_img);
         rec_cnt++;
       }
       else
       {
-        if (rec_cnt > cap_fps * 60 * 1)
+        if (test_fps)
         {
-          writer.write(src_img);
-          writer.release();
-          rec_cnt = 0;
-        }
-        else
-        {
-          writer.write(src_img);
-          rec_cnt++;
+          if (rec_cnt > cap_fps * 60 * 1)
+          {
+            writer.write(src_img);
+            writer.release();
+            rec_cnt = 0;
+          }
+          else
+          {
+            writer.write(src_img);
+            rec_cnt++;
+          }
         }
       }
       cout << "[REC] " << rec_cnt << ' ' << cap_fps << "\n";

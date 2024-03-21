@@ -163,7 +163,8 @@ namespace basic_armor
                      contours,
                      cv::RETR_EXTERNAL,
                      cv::CHAIN_APPROX_NONE);
-
+    //tools::Tools::imWindow("bin", bin_color_img, armor_config_.window_scale);
+    std::cout<<"c_size "<<contours.size()<<'\n';
     if (contours.size() < 2)
     {
       // fmt::print("[{}] Info, quantity of contours less than 2\n", idntifier_green);
@@ -252,13 +253,17 @@ namespace basic_armor
     // 预处理
     std::string window_name = "basic_armor";
     // cv::namedWindow("basic_armor", cv::WINDOW_NORMAL);
-    runImage(_src_img, /*_receive_data.my_color*/ uart::RED);
+    runImage(_src_img, /*_receive_data.my_color*/ uart::BLUE);
     draw_img_ = _src_img.clone();
+    std::cout<<"fl-\n";
     if (findLight())
     {
+      std::cout<<"fl\n";
       if (fittingArmor())
       {
+        std::cout<<"fa\n";
         finalArmor();
+        std::cout<<"fa2\n";
         lost_cnt_ = 10;
         // 画图开关
         fmt::print("[{}] Find Object\n", idntifier_green);

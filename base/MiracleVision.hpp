@@ -8,6 +8,7 @@
 #pragma once
 
 #include <chrono>
+#include <ctime>
 
 #include <fmt/color.h>
 #include <fmt/core.h>
@@ -35,10 +36,11 @@
 
 auto idntifier = fmt::format(fg(fmt::color::green) | fmt::emphasis::bold, "MiracleVision");
 
-int cap_fps;
+int cap_fps = 30;
 cv::VideoWriter writer;
 time_t time_now = time(0);
 bool fire;
+bool test_fps;
 
 // Processed Frame Conuter
 long long rec_time = 0;
