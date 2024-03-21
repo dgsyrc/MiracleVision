@@ -8,6 +8,13 @@
 -->
 <DEBUG_MODE>1</DEBUG_MODE>
 <!--
+  WINDOW_SCALE - windows size
+  - 0 Small
+  - 1 Medium
+  - 2 Big
+-->
+<WINDOW_SCALE>0</WINDOW_SCALE>
+<!--
   GRAY_EDIT - 是否调整灰度图参数
   - 1 Enable
   - 0 Disable
@@ -63,7 +70,7 @@
   - 1 Enable
   - 0 Disable
 -->
-<LIGHT_EDTI>1</LIGHT_EDTI>
+<LIGHT_EDTI>0</LIGHT_EDTI>
 <!--
   LIGHT_DRAW - 是否绘制灯条
   - 1 Enable
@@ -103,7 +110,7 @@
   - 1 Enable
   - 0 Disable
 -->
-<ARMOR_EDIT>1</ARMOR_EDIT>
+<ARMOR_EDIT>0</ARMOR_EDIT>
 <!--
   ARMOR_DRAW - 是否绘制装甲板
   - 1 Enable

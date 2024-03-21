@@ -8,7 +8,8 @@
 #include "MiracleVision.hpp"
 
 // video debug mode
-//#define VIDEO_DEBUG
+#define VIDEO_DEBUG
+#define RECORD
 
 // auto fire
 #define MANUAL_FIRE
@@ -33,7 +34,7 @@ int main()
   cv::VideoCapture cap_ = cv::VideoCapture(0);
 #else
 
-  cv::VideoCapture cap_(fmt::format("{}{}", SOURCE_PATH, "/video/new-final-v2.mp4"));
+  cv::VideoCapture cap_(fmt::format("{}{}", SOURCE_PATH, "/video/video.mp4"));
 
 #endif
   fmt::print("Capture init pass.\n");
@@ -76,6 +77,7 @@ int main()
 
   while (true)
   {
+    auto t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     rec_time++;
     fmt::print("[time] {}\n", rec_time);
 #ifdef RELEASE
@@ -101,9 +103,19 @@ int main()
 #endif
     if (!src_img.empty())
     {
-      src_img = src_img * 2; // increase brightness
-      //cv::imshow("[origin]", src_img);
-      //cv::waitKey(30);
+#ifdef RECORD
+      if (rec_cnt == 0)
+      {
+        std::stringstream tmp;
+        tmp << std::put_time(std::localtime(&t), "%Y%m%d%H%M%S");
+        std::string str_time = tmp.str();
+        // tools::Tools::recInit(fmt::format("{}.mp4", std::put_time(std::localtime(&t), "%y%m%d%H%M%S")));
+        cout << fmt::format("{}.mp4", str_time) << '\n';
+      }
+#endif
+      // src_img = src_img * 2; // increase brightness
+      // cv::imshow("[origin]", src_img);
+      // cv::waitKey(30);
 #ifndef RELEASE
       cv::imshow("[origin]", src_img);
       cv::waitKey(30);
@@ -122,7 +134,7 @@ int main()
       // basic auto aim mode
       case uart::AUTO_AIM:
         fmt::print("[{}] AUTO_AIM\n", idntifier);
-        //dnn_armor.Detect(src_img, dnn_model);
+        // dnn_armor.Detect(src_img, dnn_model);
         if (basic_armor_.runBasicArmor(src_img, serial_.returnReceive()))
         {
           solution.angleSolve(basic_armor_.returnFinalArmorRotatedRect(0), src_img.size().height, src_img.size().width, serial_);

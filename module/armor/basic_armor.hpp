@@ -21,6 +21,7 @@
 
 #include "devices/serial/uart_serial.hpp"
 #include "module/filter/basic_kalman.hpp"
+#include "utils/debug_tools.hpp"
 
 namespace basic_armor
 {
@@ -54,6 +55,7 @@ namespace basic_armor
   struct Armor_Config
   {
     int debug_mode = 0;
+    tools::Tools::SIZE window_scale;
     // 装甲板绘制和调试开关
     int armor_edit;
     int armor_draw;

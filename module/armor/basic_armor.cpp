@@ -15,6 +15,7 @@ namespace basic_armor
     cv::FileStorage fs_armor(_armor_config, cv::FileStorage::READ);
     // 初始化基本参数
     fs_armor["DEBUG_MODE"] >> armor_config_.debug_mode;
+    fs_armor["WINDOW_SCALE"] >> armor_config_.window_scale;
     fs_armor["GRAY_EDIT"] >> image_config_.gray_edit;
     fs_armor["COLOR_EDIT"] >> image_config_.color_edit;
     fs_armor["METHOD"] >> image_config_.method;
@@ -95,6 +96,7 @@ namespace basic_armor
     armor_.shrink_to_fit();
 
     fs_armor << "DEBUG_MODE" << armor_config_.debug_mode;
+    fs_armor << "WINDOW_SCALE" << armor_config_.window_scale;
     fs_armor << "GRAY_EDIT" << image_config_.gray_edit;
     fs_armor << "COLOR_EDIT" << image_config_.color_edit;
     fs_armor << "METHOD" << image_config_.method;
@@ -217,9 +219,8 @@ namespace basic_armor
           box.angle > light_config_.angle_min &&
           light_w_h < light_config_.ratio_w_h_max &&
           light_w_h > light_config_.ratio_w_h_min &&
-           box.size.height * box.size.width < 30000 &&
-           box.size.height * box.size.width > 400
-      )
+          box.size.height * box.size.width < 30000 &&
+          box.size.height * box.size.width > 400)
       {
         light_.emplace_back(box);
         if (light_config_.light_draw == 1 || light_config_.light_edit == 1)
@@ -249,7 +250,9 @@ namespace basic_armor
                                const uart::Receive_Data _receive_data)
   {
     // 预处理
-    runImage(_src_img, /*_receive_data.my_color*/ uart::BLUE);
+    std::string window_name = "basic_armor";
+    // cv::namedWindow("basic_armor", cv::WINDOW_NORMAL);
+    runImage(_src_img, /*_receive_data.my_color*/ uart::RED);
     draw_img_ = _src_img.clone();
     if (findLight())
     {
@@ -267,9 +270,9 @@ namespace basic_armor
           fmt::print("[{}] {}\n", idntifier_red, armor_data_.width * armor_data_.height);
           if (armor_config_.debug_mode == 1)
           {
-
-            cv::imshow("basic_armor", draw_img_);
-            cv::waitKey(30);
+            tools::Tools::imWindow(window_name, draw_img_, armor_config_.window_scale);
+            // cv::imshow("basic_armor", draw_img_);
+            // cv::waitKey(30);
           }
           draw_img_ = cv::Mat::zeros(_src_img.size(), CV_8UC3);
         }
@@ -283,8 +286,9 @@ namespace basic_armor
     {
       if (armor_config_.debug_mode == 1)
       {
-        cv::imshow("basic_armor", draw_img_);
-        cv::waitKey(30);
+        tools::Tools::imWindow(window_name, draw_img_, armor_config_.window_scale);
+        // cv::imshow("basic_armor", draw_img_);
+        // cv::waitKey(30);
       }
       draw_img_ = cv::Mat::zeros(_src_img.size(), CV_8UC3);
     }
@@ -294,6 +298,7 @@ namespace basic_armor
   bool Detector::sentryMode(const cv::Mat &_src_img,
                             const uart::Receive_Data _receive_data)
   {
+    std::string window_name = "sentry_armor";
     if (sentry_cnt_ == 0)
     {
       // 更新哨兵预测方向及预测量
@@ -332,8 +337,9 @@ namespace basic_armor
           {
             if (armor_config_.debug_mode == 1)
             {
-              cv::imshow("sentry_armor", draw_img_);
-              cv::waitKey(30);
+              tools::Tools::imWindow(window_name, draw_img_, armor_config_.window_scale);
+              // cv::imshow("sentry_armor", draw_img_);
+              // cv::waitKey(30);
             }
             draw_img_ = cv::Mat::zeros(_src_img.size(), CV_8UC3);
           }
@@ -347,7 +353,8 @@ namespace basic_armor
       {
         if (armor_config_.debug_mode == 1)
         {
-          cv::imshow("[basic_armor] getWriteData() -> draw_img_", draw_img_);
+          // cv::imshow("[basic_armor] getWriteData() -> draw_img_", draw_img_);
+          tools::Tools::imWindow(window_name, draw_img_, armor_config_.window_scale);
         }
         draw_img_ = cv::Mat::zeros(_src_img.size(), CV_8UC3);
       }
@@ -508,7 +515,6 @@ namespace basic_armor
 
       cv::imshow(window_name, armor_trackbar_);
     }
-    std::cout << "PASS" << armor_config_.armor_edit << "\n";
     for (size_t i = 0; i != light_.size(); ++i)
     {
       for (size_t j = i + 1; j != light_.size(); ++j)
@@ -779,11 +785,12 @@ namespace basic_armor
       cv::bitwise_or(bin_red_gray_img, bin_blue_gray_img, bin_gray_img);
       break;
     }
-
+    
     if (image_config_.gray_edit && armor_config_.debug_mode)
     {
-      cv::imshow(window_name, bin_gray_img);
-      cv::waitKey(30);
+      tools::Tools::imWindow(window_name, bin_gray_img, armor_config_.window_scale);
+      // cv::imshow(window_name, bin_gray_img);
+      // cv::waitKey(30);
     }
     return bin_gray_img;
   }
@@ -797,21 +804,21 @@ namespace basic_armor
     cv::split(_src_img, _split);
 
     std::string window_name = {"[basic_armor] brgPretreat() -> color_trackbar"};
-    
+
     switch (_my_color)
     {
     case uart::RED:
       // my_color 为红色，则处理蓝色的情况
       cv::subtract(_split[0], _split[2], bin_color_img);
       cv::subtract(_split[0], _split[1], bin_color_green_img);
-      
+
       if (image_config_.color_edit && !image_config_.bgr_trackbar)
       {
         image_config_.bgr_trackbar = true;
         cv::namedWindow(window_name);
         cv::createTrackbar("blue_color_th", window_name,
                            &image_config_.blue_armor_color_th, 255, NULL);
-        cv::imshow(window_name, this->bgr_trackbar_);
+        cv::imshow(window_name, bgr_trackbar_);
       }
 
       cv::threshold(bin_color_img, bin_color_img, image_config_.blue_armor_color_th, 255, cv::THRESH_BINARY);
@@ -823,14 +830,14 @@ namespace basic_armor
       // my_color 为蓝色，则处理红色的情况
       cv::subtract(_split[2], _split[0], bin_color_img);
       cv::subtract(_split[2], _split[1], bin_color_green_img);
-      
+
       if (image_config_.color_edit && !image_config_.bgr_trackbar)
       {
         image_config_.bgr_trackbar = true;
         cv::namedWindow(window_name);
         cv::createTrackbar("red_color_th", window_name,
                            &image_config_.red_armor_color_th, 255, NULL);
-        cv::imshow(window_name, this->bgr_trackbar_);
+        cv::imshow(window_name, bgr_trackbar_);
       }
 
       cv::threshold(bin_color_img, bin_color_img, image_config_.red_armor_color_th, 255, cv::THRESH_BINARY);
@@ -853,7 +860,7 @@ namespace basic_armor
                            &image_config_.red_armor_color_th, 255, NULL);
         cv::createTrackbar("blue_color_th", window_name,
                            &image_config_.blue_armor_color_th, 255, NULL);
-        cv::imshow(window_name, this->bgr_trackbar_);
+        cv::imshow(window_name, bgr_trackbar_);
       }
       cv::threshold(bin_blue_color_img, bin_blue_color_img, image_config_.blue_armor_color_th, 255, cv::THRESH_BINARY);
       cv::threshold(bin_blue_green_img, bin_blue_green_img, image_config_.green_armor_color_th, 255, cv::THRESH_BINARY);
@@ -867,8 +874,9 @@ namespace basic_armor
 
     if (image_config_.color_edit && armor_config_.debug_mode)
     {
-      cv::imshow(window_name, bin_color_img);
-      cv::waitKey(30);
+      tools::Tools::imWindow(window_name, bin_color_img, armor_config_.window_scale);
+      // cv::imshow(window_name, bin_color_img);
+      // cv::waitKey(30);
     }
     return bin_color_img;
   }
@@ -878,7 +886,6 @@ namespace basic_armor
   {
     cv::cvtColor(_src_img, hsv_img, cv::COLOR_BGR2HSV_FULL);
     std::string window_name = {"[basic_armor] hsvPretreat() -> hsv_trackbar"};
-    std::cout<<"AAAAAAAAAAAAAA "<<image_config_.hsv_trackbar<<image_config_.color_edit<<"\n";
     switch (_my_color)
     {
     // my_color 为红色，则处理蓝色的情况
@@ -999,8 +1006,9 @@ namespace basic_armor
 
     if (image_config_.color_edit && armor_config_.debug_mode)
     {
-      cv::imshow(window_name, bin_color_img);
-      cv::waitKey(30);
+      tools::Tools::imWindow(window_name, bin_color_img, armor_config_.window_scale);
+      // cv::imshow(window_name, bin_color_img);
+      // cv::waitKey(30);
     }
 
     return bin_color_img;

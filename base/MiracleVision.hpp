@@ -7,6 +7,8 @@
  */
 #pragma once
 
+#include <chrono>
+
 #include <fmt/color.h>
 #include <fmt/core.h>
 
@@ -27,6 +29,7 @@
 #include "module/camera/camera_calibration.hpp"
 #include "module/angle_solve/angle_solve.hpp"
 #include "module/buff/new_buff.hpp"
+#include "utils/debug_tools.hpp"
 
 #include <string>
 
