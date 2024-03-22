@@ -163,8 +163,8 @@ namespace basic_armor
                      contours,
                      cv::RETR_EXTERNAL,
                      cv::CHAIN_APPROX_NONE);
-    //tools::Tools::imWindow("bin", bin_color_img, armor_config_.window_scale);
-    std::cout<<"c_size "<<contours.size()<<'\n';
+    // tools::Tools::imWindow("bin", bin_color_img, armor_config_.window_scale);
+    std::cout << "c_size " << contours.size() << '\n';
     if (contours.size() < 2)
     {
       // fmt::print("[{}] Info, quantity of contours less than 2\n", idntifier_green);
@@ -781,7 +781,7 @@ namespace basic_armor
       cv::bitwise_or(bin_red_gray_img, bin_blue_gray_img, bin_gray_img);
       break;
     }
-    
+
     if (image_config_.gray_edit && armor_config_.debug_mode)
     {
       tools::Tools::imWindow(window_name, bin_gray_img, armor_config_.window_scale);
