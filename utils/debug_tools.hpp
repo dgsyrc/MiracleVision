@@ -49,9 +49,9 @@ namespace tools
             }
         }
 
-        static void recordInit(std::string video_name ,cv::VideoWriter &writer, cv::Size frame_size, int fps)
+        static void recordInit(std::string video_name, cv::VideoWriter &writer, cv::Size frame_size, int fps)
         {
-            writer.open(video_name, cv::VideoWriter::fourcc('X', '2', '6', '4'), fps, frame_size);
+            writer.open(video_name, cv::VideoWriter::fourcc('m', 'p', '4', 'v'), fps, frame_size);
             if (!writer.isOpened())
             {
                 fmt::print("[{}] Can't create video file\n", err_idntifier);

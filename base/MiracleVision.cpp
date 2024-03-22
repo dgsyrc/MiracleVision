@@ -8,7 +8,7 @@
 #include "MiracleVision.hpp"
 
 // video debug mode
-// #define VIDEO_DEBUG
+#define VIDEO_DEBUG
 #define RECORD
 
 // auto fire
@@ -34,7 +34,7 @@ int main()
   cv::VideoCapture cap_ = cv::VideoCapture(0);
 #else
 
-  cv::VideoCapture cap_(fmt::format("{}{}", SOURCE_PATH, "/video/video.mp4"));
+  cv::VideoCapture cap_(fmt::format("{}{}", SOURCE_PATH, "/video/1.avi"));
 
 #endif
   fmt::print("Capture init pass.\n");
@@ -99,7 +99,7 @@ int main()
     }
     cv::Size frameSize = {src_img.cols, src_img.rows};
     // cap_fps = cap_.get(cv::CAP_PROP_FPS);
-    //cap_fps = 30;
+    // cap_fps = 30;
 #else
     cap_.read(src_img);
 
@@ -109,7 +109,7 @@ int main()
 #endif
     if (!src_img.empty())
     {
-      //src_img = src_img * 2;
+      // src_img = src_img * 2;
 #ifdef RECORD
       if (!test_fps && rec_cnt < 200)
       {
@@ -133,7 +133,7 @@ int main()
         std::stringstream tmp;
         tmp << std::put_time(std::localtime(&t), "%Y%m%d%H%M%S");
         std::string str_time = tmp.str();
-        std::string video_name = fmt::format("{}/video/record/{}.avi", SOURCE_PATH, str_time);
+        std::string video_name = fmt::format("{}/video/record/{}.mp4", SOURCE_PATH, str_time);
         cout << frameSize.width << ' ' << frameSize.height << ' ' << cap_fps << '\n';
         tools::Tools::recordInit(video_name, writer, frameSize, cap_fps);
         writer.write(src_img);

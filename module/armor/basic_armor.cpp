@@ -253,17 +253,13 @@ namespace basic_armor
     // 预处理
     std::string window_name = "basic_armor";
     // cv::namedWindow("basic_armor", cv::WINDOW_NORMAL);
-    runImage(_src_img, /*_receive_data.my_color*/ uart::BLUE);
+    runImage(_src_img, /*_receive_data.my_color*/ uart::RED);
     draw_img_ = _src_img.clone();
-    std::cout<<"fl-\n";
     if (findLight())
     {
-      std::cout<<"fl\n";
       if (fittingArmor())
       {
-        std::cout<<"fa\n";
         finalArmor();
-        std::cout<<"fa2\n";
         lost_cnt_ = 10;
         // 画图开关
         fmt::print("[{}] Find Object\n", idntifier_green);
@@ -292,8 +288,6 @@ namespace basic_armor
       if (armor_config_.debug_mode == 1)
       {
         tools::Tools::imWindow(window_name, draw_img_, armor_config_.window_scale);
-        // cv::imshow("basic_armor", draw_img_);
-        // cv::waitKey(30);
       }
       draw_img_ = cv::Mat::zeros(_src_img.size(), CV_8UC3);
     }
@@ -343,8 +337,6 @@ namespace basic_armor
             if (armor_config_.debug_mode == 1)
             {
               tools::Tools::imWindow(window_name, draw_img_, armor_config_.window_scale);
-              // cv::imshow("sentry_armor", draw_img_);
-              // cv::waitKey(30);
             }
             draw_img_ = cv::Mat::zeros(_src_img.size(), CV_8UC3);
           }
@@ -358,7 +350,6 @@ namespace basic_armor
       {
         if (armor_config_.debug_mode == 1)
         {
-          // cv::imshow("[basic_armor] getWriteData() -> draw_img_", draw_img_);
           tools::Tools::imWindow(window_name, draw_img_, armor_config_.window_scale);
         }
         draw_img_ = cv::Mat::zeros(_src_img.size(), CV_8UC3);

@@ -6,14 +6,14 @@
   - 1 Enable
   - 0 Disable
 -->
-<DEBUG_MODE>1</DEBUG_MODE>
+<DEBUG_MODE>0</DEBUG_MODE>
 <!--
   WINDOW_SCALE - windows size
   - 0 Small
   - 1 Medium
   - 2 Big
 -->
-<WINDOW_SCALE>1</WINDOW_SCALE>
+<WINDOW_SCALE>0</WINDOW_SCALE>
 <!--
   GRAY_EDIT - 是否调整灰度图参数
   - 1 Enable
