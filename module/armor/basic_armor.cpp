@@ -270,9 +270,9 @@ namespace basic_armor
     // cv::putText(src_img, "G " + std::to_string(B_val), {120, 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
     // cv::putText(src_img, "R " + std::to_string(B_val), {220, 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
     fmt::print("[{}] B {} G {} R {}\n",idntifier_green, B_val, G_val, R_val);
-    tools::Tools::imWindow("[test B]", channels[0], tools::Tools::FIX_MEDIUM);
-    tools::Tools::imWindow("[test G]", channels[1], tools::Tools::FIX_MEDIUM);
-    tools::Tools::imWindow("[test R]", channels[2], tools::Tools::FIX_MEDIUM);
+    tools::Tools::imWindow("[test B]", channels[0], tools::Tools::FIX_MEDIUM); // 150~180
+    tools::Tools::imWindow("[test G]", channels[1], tools::Tools::FIX_MEDIUM); // 100~140
+    tools::Tools::imWindow("[test R]", channels[2], tools::Tools::FIX_MEDIUM); // 20~30
 
     return true;
   }
@@ -282,7 +282,7 @@ namespace basic_armor
   {
     // 预处理
     std::string window_name = "basic_armor";
-    runImage(_src_img, /*_receive_data.my_color*/ uart::RED);
+    runImage(_src_img, /*_receive_data.my_color*/ uart::BLUE);
     draw_img_ = _src_img.clone();
     if (findLight(draw_img_))
     {
