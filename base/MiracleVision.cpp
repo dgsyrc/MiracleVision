@@ -8,7 +8,7 @@
 #include "MiracleVision.hpp"
 
 // video debug mode
-#define VIDEO_DEBUG
+// #define VIDEO_DEBUG
 #define RECORD
 
 // auto fire
@@ -180,7 +180,7 @@ int main()
       case uart::AUTO_AIM:
         fmt::print("[{}] AUTO_AIM\n", idntifier);
         // dnn_armor.Detect(src_img, dnn_model);
-        if (/*basic_armor_.runBasicArmor(src_img, serial_.returnReceive())*/ basic_armor_.sentryMode(src_img, serial_.returnReceive()))
+        if (basic_armor_.runBasicArmor(src_img, serial_.returnReceive())/*basic_armor_.sentryMode(src_img, serial_.returnReceive())*/)
         {
           solution.angleSolve(basic_armor_.returnFinalArmorRotatedRect(0), src_img.size().height, src_img.size().width, serial_);
         }

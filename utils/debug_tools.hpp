@@ -22,6 +22,7 @@ namespace tools
             SMALL,
             MEDIUM,
             BIG,
+            FIX_MEDIUM
         };
         static void imWindow(std::string window_name, cv::Mat &src_img, SIZE size)
         {
@@ -41,6 +42,12 @@ namespace tools
                 break;
             case BIG:
                 tmp = src_img;
+                cv::imshow(window_name, tmp);
+                cv::waitKey(30);
+                break;
+            case FIX_MEDIUM:
+                cv::resizeWindow(window_name, cv::Size(512, 512));
+                cv::resize(src_img, tmp, cv::Size(int(src_img.cols * 0.6), int(src_img.rows * 0.6)));
                 cv::imshow(window_name, tmp);
                 cv::waitKey(30);
                 break;

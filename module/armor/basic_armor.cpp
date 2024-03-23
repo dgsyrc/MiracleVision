@@ -255,9 +255,9 @@ namespace basic_armor
     cv::Mat roi = src_img(rect_);
     cv::Mat channels[3];
     cv::split(roi, channels);
-    tools::Tools::imWindow("[test B]", channels[0], armor_config_.window_scale);
-    tools::Tools::imWindow("[test G]", channels[1], armor_config_.window_scale);
-    tools::Tools::imWindow("[test R]", channels[2], armor_config_.window_scale);
+    tools::Tools::imWindow("[test B]", channels[0], tools::Tools::FIX_MEDIUM);
+    tools::Tools::imWindow("[test G]", channels[1], tools::Tools::FIX_MEDIUM);
+    tools::Tools::imWindow("[test R]", channels[2], tools::Tools::FIX_MEDIUM);
     return true;
   }
 
