@@ -278,7 +278,7 @@ namespace basic_armor
       }
       break;
     case uart::BLUE:
-      if (B_val >= 140 && B_val <= 190 && G_val >= 90 && G_val <= 160 && R_val >= 0 && R_val <= 50)
+      if (B_val >= 10 && B_val <= 70 && G_val >= 10 && G_val <= 70 && R_val >= 100 && R_val <= 160)
       {
         fmt::print("[{}] Find red light\n", idntifier_green);
         return true;
