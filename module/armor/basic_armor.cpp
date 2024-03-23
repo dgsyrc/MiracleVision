@@ -310,7 +310,7 @@ namespace basic_armor
     std::string window_name = "basic_armor";
     runImage(_src_img, /*_receive_data.my_color*/ uart::BLUE);
     draw_img_ = _src_img.clone();
-    if (findLight(draw_img_, _receive_data.my_color))
+    if (findLight(draw_img_, /*_receive_data.my_color*/ uart::BLUE))
     {
       if (fittingArmor())
       {
