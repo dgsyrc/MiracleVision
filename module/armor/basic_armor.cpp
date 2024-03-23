@@ -206,8 +206,9 @@ namespace basic_armor
       }
 
       box = cv::fitEllipse(cv::Mat(contours[i]));
-      if (colorCheck(box, src_img, uart::Color(my_color)))
+      if (!colorCheck(box, src_img, uart::Color(my_color)))
       {
+        continue;
       }
       if (box.angle > 90.0f)
       {
@@ -222,8 +223,8 @@ namespace basic_armor
           box.angle > light_config_.angle_min &&
           light_w_h < light_config_.ratio_w_h_max &&
           light_w_h > light_config_.ratio_w_h_min &&
-          box.size.height * box.size.width < 30000 &&
-          box.size.height * box.size.width > 400)
+          box.size.height * box.size.width < 30000 /*&&
+          box.size.height * box.size.width > 400*/)
       {
         light_.emplace_back(box);
         if (light_config_.light_draw == 1 || light_config_.light_edit == 1)
