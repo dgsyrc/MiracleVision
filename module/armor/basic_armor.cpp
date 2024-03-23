@@ -259,11 +259,11 @@ namespace basic_armor
     cv::Mat channels[3];
     std::cout << "IN3\n";
     cv::split(roi, channels);
-    cv::putText(channels[0], std::to_string((int)(static_cast<int>(mean(channels[0]).val[0]))), {channels[0].cols, channels[1].rows + 10.0}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
+    //cv::putText(channels[0], std::to_string((int)(static_cast<int>(mean(channels[0]).val[0]))), {channels[0].cols, channels[1].rows + 10.0}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
     tools::Tools::imWindow("[test B]", channels[0], tools::Tools::FIX_MEDIUM);
-    cv::putText(channels[1], std::to_string((int)(static_cast<int>(mean(channels[1]).val[1]))), {channels[0].cols, channels[1].rows + 10.0}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
+    //cv::putText(channels[1], std::to_string((int)(static_cast<int>(mean(channels[1]).val[1]))), {channels[0].cols, channels[1].rows + 10.0}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
     tools::Tools::imWindow("[test G]", channels[1], tools::Tools::FIX_MEDIUM);
-    cv::putText(channels[2], std::to_string((int)(static_cast<int>(mean(channels[2]).val[2]))), {channels[0].cols, channels[1].rows + 10.0}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
+    //cv::putText(channels[2], std::to_string((int)(static_cast<int>(mean(channels[2]).val[2]))), {channels[0].cols, channels[1].rows + 10.0}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
     tools::Tools::imWindow("[test R]", channels[2], tools::Tools::FIX_MEDIUM);
 
     return true;
