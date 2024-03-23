@@ -269,9 +269,9 @@ namespace basic_armor
     cv::putText(channels[0], std::to_string(B_val), {channels[0].cols, channels[0].rows + 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
     cv::putText(channels[1], std::to_string(B_val), {channels[1].cols, channels[1].rows + 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
     cv::putText(channels[2], std::to_string(B_val), {channels[2].cols, channels[2].rows + 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
-    tools::Tools::imWindow("[test B]", channels[0], tools::Tools::FIX_MEDIUM, true);
-    tools::Tools::imWindow("[test G]", channels[1], tools::Tools::FIX_MEDIUM, true);
-    tools::Tools::imWindow("[test R]", channels[2], tools::Tools::FIX_MEDIUM, true);
+    tools::Tools::imWindow("[test B]", channels[0], tools::Tools::FIX_MEDIUM);
+    tools::Tools::imWindow("[test G]", channels[1], tools::Tools::FIX_MEDIUM);
+    tools::Tools::imWindow("[test R]", channels[2], tools::Tools::FIX_MEDIUM);
 
     return true;
   }
