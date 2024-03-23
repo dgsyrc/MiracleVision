@@ -219,16 +219,19 @@ namespace basic_armor
       static float _w = MIN(box.size.width, box.size.height);
       static float light_w_h = _h / _w;
       // 判断灯条的条件
+      std::cout << "angle\n";
       if (box.angle < light_config_.angle_max &&
           box.angle > light_config_.angle_min &&
           light_w_h < light_config_.ratio_w_h_max &&
           light_w_h > light_config_.ratio_w_h_min &&
           box.size.height * box.size.width < 30000 /*&&
-          box.size.height * box.size.width > 400*/)
+          box.size.height * box.size.width > 400*/
+      )
       {
         light_.emplace_back(box);
         if (light_config_.light_draw == 1 || light_config_.light_edit == 1)
         {
+          std::cout << "draw\n";
           cv::Point2f vertex[4];
           box.points(vertex);
           cv::putText(draw_img_, std::to_string((int)(box.angle)), {vertex[1].x, vertex[1].y - 5}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 255));
