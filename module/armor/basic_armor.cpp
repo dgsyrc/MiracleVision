@@ -317,7 +317,7 @@ namespace basic_armor
                             _receive_data.yaw);
       runImage(_src_img, _receive_data.my_color);
       draw_img_ = _src_img.clone();
-      if (findLight())
+      if (findLight(draw_img_))
       {
         if (fittingArmor())
         {
