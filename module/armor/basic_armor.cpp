@@ -261,8 +261,8 @@ namespace basic_armor
     cv::Mat channels[3];
     cv::split(roi, channels);
     int B_val = (int)(static_cast<int>(mean(channels[0]).val[0]));
-    int G_val = (int)(static_cast<int>(mean(channels[1]).val[1]));
-    int R_val = (int)(static_cast<int>(mean(channels[2]).val[2]));
+    int G_val = (int)(static_cast<int>(mean(channels[1]).val[0]));
+    int R_val = (int)(static_cast<int>(mean(channels[2]).val[0]));
     //cv::copyMakeBorder(channels[0], channels[0], 0, 50, 0, 50, cv::BORDER_CONSTANT, cv::Scalar(0));
     //cv::copyMakeBorder(channels[1], channels[1], 0, 50, 0, 50, cv::BORDER_CONSTANT, cv::Scalar(0));
     //cv::copyMakeBorder(channels[2], channels[2], 0, 50, 0, 50, cv::BORDER_CONSTANT, cv::Scalar(0));
