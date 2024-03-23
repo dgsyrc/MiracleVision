@@ -267,8 +267,8 @@ namespace basic_armor
     cv::copyMakeBorder(channels[1], channels[1], 0, 50, 0, 50, cv::BORDER_CONSTANT, cv::Scalar(0));
     cv::copyMakeBorder(channels[2], channels[2], 0, 50, 0, 50, cv::BORDER_CONSTANT, cv::Scalar(0));
     cv::putText(src_img, "B " + std::to_string(B_val), {20, 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
-    cv::putText(src_img, "G " + std::to_string(B_val), {60, 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
-    cv::putText(src_img, "R " + std::to_string(B_val), {100, 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
+    cv::putText(src_img, "G " + std::to_string(B_val), {120, 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
+    cv::putText(src_img, "R " + std::to_string(B_val), {220, 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
     tools::Tools::imWindow("[test B]", channels[0], tools::Tools::FIX_MEDIUM);
     tools::Tools::imWindow("[test G]", channels[1], tools::Tools::FIX_MEDIUM);
     tools::Tools::imWindow("[test R]", channels[2], tools::Tools::FIX_MEDIUM);
