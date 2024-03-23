@@ -263,9 +263,9 @@ namespace basic_armor
     int B_val = (int)(static_cast<int>(mean(channels[0]).val[0]));
     int G_val = (int)(static_cast<int>(mean(channels[1]).val[1]));
     int R_val = (int)(static_cast<int>(mean(channels[2]).val[2]));
-    tools::Tools::imWindow(fmt::format("[test B] B_val = {}", B_val), channels[0], tools::Tools::FIX_MEDIUM);
-    tools::Tools::imWindow(fmt::format("[test G] G_val = {}", G_val), channels[1], tools::Tools::FIX_MEDIUM);
-    tools::Tools::imWindow(fmt::format("[test R] R_val = {}", R_val), channels[2], tools::Tools::FIX_MEDIUM);
+    tools::Tools::imWindow(fmt::format("[test B] B_val = {}", B_val), channels[0], tools::Tools::FIX_MEDIUM, true);
+    tools::Tools::imWindow(fmt::format("[test G] G_val = {}", G_val), channels[1], tools::Tools::FIX_MEDIUM, true);
+    tools::Tools::imWindow(fmt::format("[test R] R_val = {}", R_val), channels[2], tools::Tools::FIX_MEDIUM, true);
 
     return true;
   }
