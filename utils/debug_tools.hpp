@@ -24,7 +24,7 @@ namespace tools
             BIG,
             FIX_MEDIUM
         };
-        static void imWindow(std::string window_name, cv::Mat &src_img, SIZE size)
+        static void imWindow(std::string window_name, cv::Mat &src_img, SIZE size, bool if_destroy = false)
         {
             cv::Mat tmp;
             cv::namedWindow(window_name, cv::WINDOW_AUTOSIZE);
@@ -53,6 +53,10 @@ namespace tools
                 break;
             default:
                 break;
+            }
+            if(if_destroy)
+            {
+                cv::destroyWindow(window_name);
             }
         }
 
