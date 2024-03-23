@@ -177,7 +177,7 @@ namespace basic_armor
      * @return true   找到灯条
      * @return false  没有找到灯条
      */
-    bool findLight();
+    bool findLight(cv::Mat &src_img);
     /**
      * @brief 最优装甲板排序
      *
@@ -354,6 +354,7 @@ namespace basic_armor
      * @return cv::Mat
      */
     cv::Mat whilePretreat(const cv::Mat &_src_img);
+    bool colorCheck(cv::RotatedRect &rect, cv::Mat &src_img);
 
   private:
     // 读取 xml 文件参数

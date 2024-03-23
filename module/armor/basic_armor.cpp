@@ -154,7 +154,7 @@ namespace basic_armor
     fs_armor.release();
   }
 
-  bool Detector::findLight()
+  bool Detector::findLight(cv::Mat &src_img)
   {
     int perimeter = 0;
     cv::RotatedRect box;
@@ -167,7 +167,7 @@ namespace basic_armor
     std::cout << "c_size " << contours.size() << '\n';
     if (contours.size() < 2)
     {
-      // fmt::print("[{}] Info, quantity of contours less than 2\n", idntifier_green);
+      fmt::print("[{}] Info, quantity of contours less than 2\n", idntifier_green);
       return false;
     }
     // 调参开关
@@ -206,7 +206,9 @@ namespace basic_armor
       }
 
       box = cv::fitEllipse(cv::Mat(contours[i]));
-
+      if (colorCheck(box, src_img))
+      {
+      }
       if (box.angle > 90.0f)
       {
         box.angle = box.angle - 180.0f;
@@ -247,15 +249,26 @@ namespace basic_armor
     return true;
   }
 
+  bool Detector::colorCheck(cv::RotatedRect &rect, cv::Mat &src_img)
+  {
+    cv::Rect rect_ = rect.boundingRect();
+    cv::Mat roi = src_img(rect_);
+    cv::Mat channels[3];
+    cv::split(roi, channels);
+    tools::Tools::imWindow("[test B]", channels[0], armor_config_.window_scale);
+    tools::Tools::imWindow("[test G]", channels[1], armor_config_.window_scale);
+    tools::Tools::imWindow("[test R]", channels[2], armor_config_.window_scale);
+    return true;
+  }
+
   bool Detector::runBasicArmor(const cv::Mat &_src_img,
                                const uart::Receive_Data _receive_data)
   {
     // 预处理
     std::string window_name = "basic_armor";
-    // cv::namedWindow("basic_armor", cv::WINDOW_NORMAL);
     runImage(_src_img, /*_receive_data.my_color*/ uart::RED);
     draw_img_ = _src_img.clone();
-    if (findLight())
+    if (findLight(draw_img_))
     {
       if (fittingArmor())
       {
@@ -272,8 +285,6 @@ namespace basic_armor
           if (armor_config_.debug_mode == 1)
           {
             tools::Tools::imWindow(window_name, draw_img_, armor_config_.window_scale);
-            // cv::imshow("basic_armor", draw_img_);
-            // cv::waitKey(30);
           }
           draw_img_ = cv::Mat::zeros(_src_img.size(), CV_8UC3);
         }

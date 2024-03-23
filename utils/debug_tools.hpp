@@ -26,7 +26,7 @@ namespace tools
         static void imWindow(std::string window_name, cv::Mat &src_img, SIZE size)
         {
             cv::Mat tmp;
-            cv::namedWindow(window_name);
+            cv::namedWindow(window_name, cv::WINDOW_AUTOSIZE);
             switch (size)
             {
             case SMALL:
