@@ -206,7 +206,7 @@ namespace basic_armor
       }
 
       box = cv::fitEllipse(cv::Mat(contours[i]));
-      if (box.size.area() >= 10.f && colorCheck(box, src_img))
+      if (colorCheck(box, src_img))
       {
       }
       if (box.angle > 90.0f)
@@ -251,11 +251,8 @@ namespace basic_armor
 
   bool Detector::colorCheck(cv::RotatedRect &rect, cv::Mat &src_img)
   {
+    std::cout << "IN\n";
     cv::Rect rect_ = rect.boundingRect();
-    if (rect_.area()<10.0)
-    {
-      return false;
-    }
     cv::Mat roi = src_img(rect_);
     cv::Mat channels[3];
 
