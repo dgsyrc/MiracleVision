@@ -253,22 +253,19 @@ namespace basic_armor
   {
 
     cv::Rect rect_ = rect.boundingRect();
-    if (rect_.tl().x > src_img.cols || rect_.br().x > src_img.cols || rect_.tl().y > src_img.rows || rect_.br().y > src_img.rows )
+    if (rect_.tl().x > src_img.cols || rect_.br().x > src_img.cols || rect_.tl().y > src_img.rows || rect_.br().y > src_img.rows || rect_.tl().x <= 0 || rect_.br().x <= 0 || rect_.tl().y <= 0 || rect_.br().y <= 0)
     {
       return false;
     }
-    std::cout << "IN" << rect_.tl().x << ' ' << rect_.tl().y << ' ' << rect_.br().x << ' ' << rect_.br().y << '\n';
     cv::Mat roi = src_img(rect_);
-    std::cout << "IN2\n";
     cv::Mat channels[3];
-    std::cout << "IN3\n";
     cv::split(roi, channels);
-    //cv::putText(channels[0], std::to_string((int)(static_cast<int>(mean(channels[0]).val[0]))), {channels[0].cols, channels[1].rows + 10.0}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
-    tools::Tools::imWindow("[test B]", channels[0], tools::Tools::FIX_MEDIUM);
-    //cv::putText(channels[1], std::to_string((int)(static_cast<int>(mean(channels[1]).val[1]))), {channels[0].cols, channels[1].rows + 10.0}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
-    tools::Tools::imWindow("[test G]", channels[1], tools::Tools::FIX_MEDIUM);
-    //cv::putText(channels[2], std::to_string((int)(static_cast<int>(mean(channels[2]).val[2]))), {channels[0].cols, channels[1].rows + 10.0}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
-    tools::Tools::imWindow("[test R]", channels[2], tools::Tools::FIX_MEDIUM);
+    int B_val = (int)(static_cast<int>(mean(channels[0]).val[0]));
+    int G_val = (int)(static_cast<int>(mean(channels[1]).val[1]));
+    int R_val = (int)(static_cast<int>(mean(channels[2]).val[2]));
+    tools::Tools::imWindow(fmt::format("[test B] B_val = {}", B_val), channels[0], tools::Tools::FIX_MEDIUM);
+    tools::Tools::imWindow(fmt::format("[test G] G_val = {}", G_val), channels[1], tools::Tools::FIX_MEDIUM);
+    tools::Tools::imWindow(fmt::format("[test R] R_val = {}", R_val), channels[2], tools::Tools::FIX_MEDIUM);
 
     return true;
   }
