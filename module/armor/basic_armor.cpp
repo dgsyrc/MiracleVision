@@ -206,7 +206,7 @@ namespace basic_armor
       }
 
       box = cv::fitEllipse(cv::Mat(contours[i]));
-      if (colorCheck(box, src_img))
+      if (box.size.area() >= 10.f && colorCheck(box, src_img))
       {
       }
       if (box.angle > 90.0f)
@@ -256,8 +256,12 @@ namespace basic_armor
     cv::Mat channels[3];
     cv::split(roi, channels);
     tools::Tools::imWindow("[test B]", channels[0], tools::Tools::FIX_MEDIUM);
+    cv::putText(src_img, std::to_string((int)(static_cast<int>(mean(channels[0]).val[0]))), {channels[0].cols, channels[1].rows + 10.0}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
     tools::Tools::imWindow("[test G]", channels[1], tools::Tools::FIX_MEDIUM);
+    cv::putText(src_img, std::to_string((int)(static_cast<int>(mean(channels[1]).val[1]))), {channels[0].cols, channels[1].rows + 10.0}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
     tools::Tools::imWindow("[test R]", channels[2], tools::Tools::FIX_MEDIUM);
+    cv::putText(src_img, std::to_string((int)(static_cast<int>(mean(channels[2]).val[2]))), {channels[0].cols, channels[1].rows + 10.0}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
+
     return true;
   }
 
