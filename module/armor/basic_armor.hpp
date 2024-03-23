@@ -121,6 +121,20 @@ namespace basic_armor
     int s_blue_min;
     int v_blue_max;
     int v_blue_min;
+    // Red BGR threshold
+    int r_red_th_max;
+    int r_red_th_min;
+    int g_red_th_max;
+    int g_red_th_min;
+    int b_red_th_max;
+    int b_red_th_min;
+    // blue BGR threshold
+    int r_blue_th_max;
+    int r_blue_th_min;
+    int g_blue_th_max;
+    int g_blue_th_min;
+    int b_blue_th_max;
+    int b_blue_th_min;
     // 调试开关
     int gray_edit = 0;
     int color_edit = 0;

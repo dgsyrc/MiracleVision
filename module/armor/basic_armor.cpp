@@ -46,6 +46,20 @@ namespace basic_armor
       fs_armor["V_BLUE_MAX"] >> image_config_.v_blue_max;
     }
 
+    fs_armor["B_RED_MIN"] >> image_config_.b_red_th_min;
+    fs_armor["B_RED_MAX"] >> image_config_.b_red_th_max;
+    fs_armor["G_RED_MIN"] >> image_config_.g_red_th_min;
+    fs_armor["G_RED_MAX"] >> image_config_.g_red_th_max;
+    fs_armor["R_RED_MIN"] >> image_config_.r_red_th_min;
+    fs_armor["R_RED_MAX"] >> image_config_.r_red_th_max;
+
+    fs_armor["B_BLUE_MIN"] >> image_config_.b_blue_th_min;
+    fs_armor["B_BLUE_MAX"] >> image_config_.b_blue_th_max;
+    fs_armor["G_BLUE_MIN"] >> image_config_.g_blue_th_min;
+    fs_armor["G_BLUE_MAX"] >> image_config_.g_blue_th_max;
+    fs_armor["R_BLUE_MIN"] >> image_config_.r_blue_th_min;
+    fs_armor["R_BLUE_MAX"] >> image_config_.r_blue_th_max;
+
     fs_armor["LIGHT_DRAW"] >> light_config_.light_draw;
     fs_armor["LIGHT_EDTI"] >> light_config_.light_edit;
 
@@ -121,6 +135,20 @@ namespace basic_armor
     fs_armor << "S_BLUE_MAX" << image_config_.s_blue_max;
     fs_armor << "V_BLUE_MIN" << image_config_.v_blue_min;
     fs_armor << "V_BLUE_MAX" << image_config_.v_blue_max;
+
+    fs_armor << "B_RED_MIN" << image_config_.b_red_th_min;
+    fs_armor << "B_RED_MAX" << image_config_.b_red_th_max;
+    fs_armor << "G_RED_MIN" << image_config_.g_red_th_min;
+    fs_armor << "G_RED_MAX" << image_config_.g_red_th_max;
+    fs_armor << "R_RED_MIN" << image_config_.r_red_th_min;
+    fs_armor << "R_RED_MAX" << image_config_.r_red_th_max;
+
+    fs_armor << "B_BLUE_MIN" << image_config_.b_blue_th_min;
+    fs_armor << "B_BLUE_MAX" << image_config_.b_blue_th_max;
+    fs_armor << "G_BLUE_MIN" << image_config_.g_blue_th_min;
+    fs_armor << "G_BLUE_MAX" << image_config_.g_blue_th_max;
+    fs_armor << "R_BLUE_MIN" << image_config_.r_blue_th_min;
+    fs_armor << "R_BLUE_MAX" << image_config_.r_blue_th_max;
 
     fs_armor << "LIGHT_EDTI" << light_config_.light_edit;
     fs_armor << "LIGHT_DRAW" << light_config_.light_draw;
@@ -219,19 +247,18 @@ namespace basic_armor
       static float _w = MIN(box.size.width, box.size.height);
       static float light_w_h = _h / _w;
       // 判断灯条的条件
-      //std::cout << "angle\n";
+      // std::cout << "angle\n";
       if (box.angle < light_config_.angle_max &&
           box.angle > light_config_.angle_min &&
           light_w_h < light_config_.ratio_w_h_max &&
           light_w_h > light_config_.ratio_w_h_min &&
-          box.size.height * box.size.width < 30000 /*&&
-          box.size.height * box.size.width > 400*/
+          box.size.height * box.size.width < 30000
       )
       {
         light_.emplace_back(box);
         if (light_config_.light_draw == 1 || light_config_.light_edit == 1)
         {
-          //std::cout << "draw\n";
+          // std::cout << "draw\n";
           cv::Point2f vertex[4];
           box.points(vertex);
           cv::putText(draw_img_, std::to_string((int)(box.angle)), {vertex[1].x, vertex[1].y - 5}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 255));
@@ -271,7 +298,7 @@ namespace basic_armor
     switch (my_color)
     {
     case uart::RED:
-      if (B_val >= 140 && B_val <= 210 && G_val >= 90 && G_val <= 160 && R_val >= 0 && R_val <= 50)
+      if (B_val >= image_config_.b_blue_th_min && B_val <= image_config_.b_blue_th_max && G_val >= image_config_.g_blue_th_min && G_val <= image_config_.g_blue_th_max && R_val >= image_config_.r_blue_th_min && R_val <= image_config_.r_blue_th_max)
       {
         fmt::print("[{}] Found blue light\n", idntifier_green);
         return true;
@@ -283,7 +310,7 @@ namespace basic_armor
       }
       break;
     case uart::BLUE:
-      if (B_val >= 10 && B_val <= 100 && G_val >= 10 && G_val <= 100 && R_val >= 100 && R_val <= 200)
+      if (B_val >= image_config_.b_red_th_min && B_val <=image_config_.b_red_th_max && G_val >= image_config_.g_red_th_min && G_val <= image_config_.g_red_th_max && R_val >= image_config_.r_red_th_min && R_val <= image_config_.r_red_th_max)
       {
         fmt::print("[{}] Found red light\n", idntifier_green);
         return true;
