@@ -253,7 +253,7 @@ namespace basic_armor
   {
 
     cv::Rect rect_ = rect.boundingRect();
-    std::cout << "IN" << rect_.width << ' ' << rect_.height << '\n';
+    std::cout << "IN" << rect_.tl().x << ' ' << rect_.tl().y << ' ' << rect_.br().x << ' ' << rect_.br().y << '\n';
     cv::Mat roi = src_img(rect_);
     std::cout << "IN2\n";
     cv::Mat channels[3];
