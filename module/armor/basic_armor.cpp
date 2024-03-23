@@ -271,7 +271,7 @@ namespace basic_armor
     switch (my_color)
     {
     case uart::RED:
-      if (B_val >= 140 && B_val <= 190 && G_val >= 90 && G_val <= 160 && R_val >= 0 && R_val <= 50)
+      if (B_val >= 140 && B_val <= 210 && G_val >= 90 && G_val <= 160 && R_val >= 0 && R_val <= 50)
       {
         fmt::print("[{}] Found blue light\n", idntifier_green);
         return true;
