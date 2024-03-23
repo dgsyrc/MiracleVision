@@ -206,7 +206,7 @@ namespace basic_armor
       }
 
       box = cv::fitEllipse(cv::Mat(contours[i]));
-      if (colorCheck(box, src_img, my_color))
+      if (colorCheck(box, src_img, uart::Color(my_color)))
       {
       }
       if (box.angle > 90.0f)
@@ -249,7 +249,7 @@ namespace basic_armor
     return true;
   }
 
-  bool Detector::colorCheck(cv::RotatedRect &rect, cv::Mat &src_img, int my_color)
+  bool Detector::colorCheck(cv::RotatedRect &rect, cv::Mat &src_img, uart::Color my_color)
   {
 
     cv::Rect rect_ = rect.boundingRect();

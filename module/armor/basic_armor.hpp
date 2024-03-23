@@ -354,7 +354,7 @@ namespace basic_armor
      * @return cv::Mat
      */
     cv::Mat whilePretreat(const cv::Mat &_src_img);
-    bool colorCheck(cv::RotatedRect &rect, cv::Mat &src_img, int my_color);
+    bool colorCheck(cv::RotatedRect &rect, cv::Mat &src_img, uart::Color my_color);
 
   private:
     // 读取 xml 文件参数
