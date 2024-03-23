@@ -263,9 +263,15 @@ namespace basic_armor
     int B_val = (int)(static_cast<int>(mean(channels[0]).val[0]));
     int G_val = (int)(static_cast<int>(mean(channels[1]).val[1]));
     int R_val = (int)(static_cast<int>(mean(channels[2]).val[2]));
-    tools::Tools::imWindow(fmt::format("[test B] B_val = {}", B_val), channels[0], tools::Tools::FIX_MEDIUM, true);
-    tools::Tools::imWindow(fmt::format("[test G] G_val = {}", G_val), channels[1], tools::Tools::FIX_MEDIUM, true);
-    tools::Tools::imWindow(fmt::format("[test R] R_val = {}", R_val), channels[2], tools::Tools::FIX_MEDIUM, true);
+    cv::copyMakeBorder(channels[0], channels[0], 0, 50, 0, 50, cv::BORDER_CONSTANT, cv::Scalar(0));
+    cv::copyMakeBorder(channels[1], channels[1], 0, 50, 0, 50, cv::BORDER_CONSTANT, cv::Scalar(0));
+    cv::copyMakeBorder(channels[2], channels[2], 0, 50, 0, 50, cv::BORDER_CONSTANT, cv::Scalar(0));
+    cv::putText(channels[0], std::to_string(B_val), {channels[0].cols, channels[0].rows + 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
+    cv::putText(channels[1], std::to_string(B_val), {channels[1].cols, channels[1].rows + 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
+    cv::putText(channels[2], std::to_string(B_val), {channels[2].cols, channels[2].rows + 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
+    tools::Tools::imWindow("[test B]", channels[0], tools::Tools::FIX_MEDIUM, true);
+    tools::Tools::imWindow("[test G]", channels[1], tools::Tools::FIX_MEDIUM, true);
+    tools::Tools::imWindow("[test R]", channels[2], tools::Tools::FIX_MEDIUM, true);
 
     return true;
   }
