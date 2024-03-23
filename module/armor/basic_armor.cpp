@@ -154,7 +154,7 @@ namespace basic_armor
     fs_armor.release();
   }
 
-  bool Detector::findLight(cv::Mat &src_img)
+  bool Detector::findLight(cv::Mat &src_img, int my_color)
   {
     int perimeter = 0;
     cv::RotatedRect box;
@@ -206,7 +206,7 @@ namespace basic_armor
       }
 
       box = cv::fitEllipse(cv::Mat(contours[i]));
-      if (colorCheck(box, src_img))
+      if (colorCheck(box, src_img, my_color))
       {
       }
       if (box.angle > 90.0f)
@@ -249,7 +249,7 @@ namespace basic_armor
     return true;
   }
 
-  bool Detector::colorCheck(cv::RotatedRect &rect, cv::Mat &src_img)
+  bool Detector::colorCheck(cv::RotatedRect &rect, cv::Mat &src_img, int my_color)
   {
 
     cv::Rect rect_ = rect.boundingRect();
@@ -263,18 +263,42 @@ namespace basic_armor
     int B_val = (int)(static_cast<int>(mean(channels[0]).val[0]));
     int G_val = (int)(static_cast<int>(mean(channels[1]).val[0]));
     int R_val = (int)(static_cast<int>(mean(channels[2]).val[0]));
-    //cv::copyMakeBorder(channels[0], channels[0], 0, 50, 0, 50, cv::BORDER_CONSTANT, cv::Scalar(0));
-    //cv::copyMakeBorder(channels[1], channels[1], 0, 50, 0, 50, cv::BORDER_CONSTANT, cv::Scalar(0));
-    //cv::copyMakeBorder(channels[2], channels[2], 0, 50, 0, 50, cv::BORDER_CONSTANT, cv::Scalar(0));
-    // cv::putText(src_img, "B " + std::to_string(B_val), {20, 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
-    // cv::putText(src_img, "G " + std::to_string(B_val), {120, 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
-    // cv::putText(src_img, "R " + std::to_string(B_val), {220, 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
-    fmt::print("[{}] B {} G {} R {}\n",idntifier_green, B_val, G_val, R_val);
-    tools::Tools::imWindow("[test B]", channels[0], tools::Tools::FIX_MEDIUM); // 150~180
-    tools::Tools::imWindow("[test G]", channels[1], tools::Tools::FIX_MEDIUM); // 100~140
-    tools::Tools::imWindow("[test R]", channels[2], tools::Tools::FIX_MEDIUM); // 20~30
+    fmt::print("[{}] B {} G {} R {}\n", idntifier_green, B_val, G_val, R_val);
+    switch (my_color)
+    {
+    case uart::RED:
+      if (B_val >= 140 && B_val <= 190 && G_val >= 90 && G_val <= 160 && R_val >= 0 && R_val <= 50)
+      {
+        fmt::print("[{}] Find blue light\n", idntifier_green);
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+      break;
+    case uart::BLUE:
+      if (B_val >= 140 && B_val <= 190 && G_val >= 90 && G_val <= 160 && R_val >= 0 && R_val <= 50)
+      {
+        fmt::print("[{}] Find red light\n", idntifier_green);
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+      break;
+    }
+    // cv::copyMakeBorder(channels[0], channels[0], 0, 50, 0, 50, cv::BORDER_CONSTANT, cv::Scalar(0));
+    // cv::copyMakeBorder(channels[1], channels[1], 0, 50, 0, 50, cv::BORDER_CONSTANT, cv::Scalar(0));
+    // cv::copyMakeBorder(channels[2], channels[2], 0, 50, 0, 50, cv::BORDER_CONSTANT, cv::Scalar(0));
+    //  cv::putText(src_img, "B " + std::to_string(B_val), {20, 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
+    //  cv::putText(src_img, "G " + std::to_string(B_val), {120, 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
+    //  cv::putText(src_img, "R " + std::to_string(B_val), {220, 20}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
 
-    return true;
+    // tools::Tools::imWindow("[test B]", channels[0], tools::Tools::FIX_MEDIUM); // 150~180 40  B R
+    // tools::Tools::imWindow("[test G]", channels[1], tools::Tools::FIX_MEDIUM); // 100~140 60
+    // tools::Tools::imWindow("[test R]", channels[2], tools::Tools::FIX_MEDIUM); // 20~30   100
   }
 
   bool Detector::runBasicArmor(const cv::Mat &_src_img,
@@ -284,7 +308,7 @@ namespace basic_armor
     std::string window_name = "basic_armor";
     runImage(_src_img, /*_receive_data.my_color*/ uart::BLUE);
     draw_img_ = _src_img.clone();
-    if (findLight(draw_img_))
+    if (findLight(draw_img_, _receive_data.my_color))
     {
       if (fittingArmor())
       {
@@ -333,7 +357,7 @@ namespace basic_armor
                             _receive_data.yaw);
       runImage(_src_img, _receive_data.my_color);
       draw_img_ = _src_img.clone();
-      if (findLight(draw_img_))
+      if (findLight(draw_img_, _receive_data.my_color))
       {
         if (fittingArmor())
         {
