@@ -251,11 +251,13 @@ namespace basic_armor
 
   bool Detector::colorCheck(cv::RotatedRect &rect, cv::Mat &src_img)
   {
-    std::cout << "IN\n";
-    cv::Rect rect_ = rect.boundingRect();
-    cv::Mat roi = src_img(rect_);
-    cv::Mat channels[3];
 
+    cv::Rect rect_ = rect.boundingRect();
+    std::cout << "IN\n";
+    cv::Mat roi = src_img(rect_);
+    std::cout << "IN2\n";
+    cv::Mat channels[3];
+    std::cout << "IN3\n";
     cv::split(roi, channels);
     cv::putText(channels[0], std::to_string((int)(static_cast<int>(mean(channels[0]).val[0]))), {channels[0].cols, channels[1].rows + 10.0}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
     tools::Tools::imWindow("[test B]", channels[0], tools::Tools::FIX_MEDIUM);
