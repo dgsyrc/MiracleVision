@@ -8,7 +8,7 @@
 #include "MiracleVision.hpp"
 
 // video debug mode
-// #define VIDEO_DEBUG
+#define VIDEO_DEBUG
 #define RECORD
 
 // auto fire
@@ -34,7 +34,7 @@ int main()
   cv::VideoCapture cap_ = cv::VideoCapture(0);
 #else
 
-  cv::VideoCapture cap_(fmt::format("{}{}", SOURCE_PATH, "/video/1.avi"));
+  cv::VideoCapture cap_(fmt::format("{}{}", SOURCE_PATH, "/video/armor.mp4"));
 
 #endif
   fmt::print("Capture init pass.\n");
@@ -122,7 +122,7 @@ int main()
         if (!test_fps)
         {
           std::time_t ed_time = std::time(nullptr);
-          cout<<ed_time - st_time<<"\n";
+          cout << ed_time - st_time << "\n";
           cap_fps = (int)(200.0 / (ed_time - st_time));
           test_fps = true;
           rec_cnt = 0;
@@ -181,7 +181,7 @@ int main()
       case uart::AUTO_AIM:
         fmt::print("[{}] AUTO_AIM\n", idntifier);
         // dnn_armor.Detect(src_img, dnn_model);
-        if (/*basic_armor_.runBasicArmor(src_img, serial_.returnReceive())*/basic_armor_.sentryMode(src_img, serial_.returnReceive()))
+        if (basic_armor_.runBasicArmor(src_img, serial_.returnReceive()) /*basic_armor_.sentryMode(src_img, serial_.returnReceive())*/)
         {
           solution.angleSolve(basic_armor_.returnFinalArmorRotatedRect(0), src_img.size().height, src_img.size().width, serial_);
         }

@@ -322,7 +322,7 @@ namespace basic_armor
     {
       if (armor_.size())
       {
-        return (uart::Write_Data::node){armor_[_num].armor_rect.center.x, armor_[_num].armor_rect.center.y};
+        return (uart::Write_Data::node){int(armor_[_num].armor_rect.center.x), int(armor_[_num].armor_rect.center.y)};
       }
       else
       {
@@ -472,6 +472,8 @@ namespace basic_armor
     float last_deviation_angle_ = 0.f;
     // 初始化陀螺仪 Yaw 轴位置
     float initial_gyroscope_ = 0.f;
+
+    std::queue<float> armor_x_point;
   };
 
 } // namespace basic_armor

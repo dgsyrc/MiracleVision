@@ -252,8 +252,7 @@ namespace basic_armor
           box.angle > light_config_.angle_min &&
           light_w_h < light_config_.ratio_w_h_max &&
           light_w_h > light_config_.ratio_w_h_min &&
-          box.size.height * box.size.width < 30000
-      )
+          box.size.height * box.size.width < 30000)
       {
         light_.emplace_back(box);
         if (light_config_.light_draw == 1 || light_config_.light_edit == 1)
@@ -261,7 +260,7 @@ namespace basic_armor
           std::cout << "draw\n";
           cv::Point2f vertex[4];
           box.points(vertex);
-          cv::putText(draw_img_, std::to_string((int)(box.angle)), {vertex[1].x, vertex[1].y - 5}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 255));
+          cv::putText(draw_img_, std::to_string(int(box.angle)), {int(vertex[1].x), int(vertex[1].y - 5)}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 255));
           for (size_t l = 0; l != 4; ++l)
           {
             cv::line(draw_img_, vertex[l], vertex[(l + 1) % 4], cv::Scalar(0, 255, 255), 3, 8);
@@ -310,7 +309,7 @@ namespace basic_armor
       }
       break;
     case uart::BLUE:
-      if (B_val >= image_config_.b_red_th_min && B_val <=image_config_.b_red_th_max && G_val >= image_config_.g_red_th_min && G_val <= image_config_.g_red_th_max && R_val >= image_config_.r_red_th_min && R_val <= image_config_.r_red_th_max)
+      if (B_val >= image_config_.b_red_th_min && B_val <= image_config_.b_red_th_max && G_val >= image_config_.g_red_th_min && G_val <= image_config_.g_red_th_max && R_val >= image_config_.r_red_th_min && R_val <= image_config_.r_red_th_max)
       {
         fmt::print("[{}] Found red light\n", idntifier_green);
         return true;
@@ -320,6 +319,9 @@ namespace basic_armor
         fmt::print("[{}] Not found red light\n", idntifier_red);
         return false;
       }
+      break;
+    default:
+      return false;
       break;
     }
     // cv::copyMakeBorder(channels[0], channels[0], 0, 50, 0, 50, cv::BORDER_CONSTANT, cv::Scalar(0));
@@ -358,7 +360,9 @@ namespace basic_armor
           if (armor_config_.debug_mode == 1)
           {
             tools::Tools::imWindow(window_name, draw_img_, armor_config_.window_scale);
+            tools::Tools::drawDiagram("diagram", armor_x_point, armor_config_.window_scale, (armor_data_.armor_rect.center.x * 1.0 / _src_img.cols), "time", "armor_x");
           }
+
           draw_img_ = cv::Mat::zeros(_src_img.size(), CV_8UC3);
         }
         return true;
@@ -457,7 +461,7 @@ namespace basic_armor
                                        const float _bullet_velocity,
                                        const float _yaw_angle)
   {
-    if (armor_config_.armor_forecast&&!armor_config_.predict_trackbar)
+    if (armor_config_.armor_forecast && !armor_config_.predict_trackbar)
     {
       std::string window_name = {"[basic_armor] sentryMode() -> sentry_trackbar"};
       cv::namedWindow(window_name);
@@ -526,7 +530,7 @@ namespace basic_armor
       }
       last_last_forecast_pixels_ = last_forecast_pixels_;
       last_forecast_pixels_ = forecast_pixels_;
-      forecast_pixels_           = kalman_.run(forecast_pixels_);
+      forecast_pixels_ = kalman_.run(forecast_pixels_);
     }
     // 计数器归零
     if (num_cnt_ % 10 == 0)
@@ -630,7 +634,7 @@ namespace basic_armor
             {
               // 储存装甲板
               // cv::line(draw_img_, armor_data_.right_light, vertex[(l + 1) % 4], cv::Scalar(0, 255, 255), 3, 8);
-              if (armor_data_.width*1.0 / armor_data_.height > 0.8 && armor_data_.width*1.0 / armor_data_.height < 3.5)
+              if (armor_data_.width * 1.0 / armor_data_.height > 0.8 && armor_data_.width * 1.0 / armor_data_.height < 3.5)
               {
                 armor_.push_back(armor_data_);
                 if (armor_config_.armor_draw == 1 ||
@@ -640,7 +644,7 @@ namespace basic_armor
                   armor_data_.armor_rect.points(vertices);
                   rectangle(draw_img_, armor_data_.armor_rect.boundingRect(),
                             cv::Scalar(255, 200, 0), 5, 8);
-                  cv::putText(draw_img_, std::to_string((int)(armor_data_.height * armor_data_.width)), {vertices[1].x, vertices[1].y - 5}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
+                  cv::putText(draw_img_, std::to_string(int(armor_data_.height * armor_data_.width)), {int(vertices[1].x), int(vertices[1].y - 5)}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
                 }
               }
             }
@@ -696,7 +700,7 @@ namespace basic_armor
                           armor_data_.right_light.center);
 
           armor_data_.aspect_ratio = armor_data_.width / (MAX(armor_data_.left_light.size.height, armor_data_.right_light.size.height));
-          std::cout<<"rat"<<armor_data_.aspect_ratio<<"\n";
+          std::cout << "rat" << armor_data_.aspect_ratio << "\n";
           // 灯条角度差
           if (fabs(armor_data_.left_light.angle - armor_data_.right_light.angle) <
               armor_config_.armor_angle_different * 0.1)
@@ -726,7 +730,7 @@ namespace basic_armor
               armor_data_.distinguish = 1;
               return true;
             }
-            //return true;
+            // return true;
           }
         }
       }
@@ -776,7 +780,7 @@ namespace basic_armor
     // 计算颜色平均强度
     static cv::Mat roi = bin_gray_img(_rect);
     int average_intensity = static_cast<int>(mean(roi).val[0]);
-    cv::putText(draw_img_, std::to_string(average_intensity), {vertices[0].x, vertices[0].y + 100}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
+    cv::putText(draw_img_, std::to_string(average_intensity), {int(vertices[0].x), int(vertices[0].y + 100)}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255, 255, 0));
     return average_intensity;
   }
 
