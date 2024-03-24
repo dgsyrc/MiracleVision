@@ -1,3 +1,5 @@
 #!/bin/bash
-sudo ./build/bin/RobotVision_Sirius
-123456
+cd /home/nuc02/Desktop/MiracleVision/build
+./bin/MiracleVision
+
+exit 0

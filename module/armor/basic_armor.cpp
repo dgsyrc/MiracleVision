@@ -339,9 +339,9 @@ namespace basic_armor
   {
     // 预处理
     std::string window_name = "basic_armor";
-    runImage(_src_img, /*_receive_data.my_color*/ uart::RED);
+    runImage(_src_img, _receive_data.my_color);
     draw_img_ = _src_img.clone();
-    if (findLight(draw_img_, /*_receive_data.my_color*/ uart::RED))
+    if (findLight(draw_img_, _receive_data.my_color))
     {
       if (fittingArmor())
       {
@@ -457,7 +457,7 @@ namespace basic_armor
                                        const float _bullet_velocity,
                                        const float _yaw_angle)
   {
-    if (armor_config_.armor_forecast)
+    if (armor_config_.armor_forecast&&!armor_config_.predict_trackbar)
     {
       std::string window_name = {"[basic_armor] sentryMode() -> sentry_trackbar"};
       cv::namedWindow(window_name);
@@ -466,9 +466,10 @@ namespace basic_armor
       cv::createTrackbar("forecast_max_size_", window_name, &forecast_max_size_, 100, NULL);
       cv::createTrackbar("judge_direction_", window_name, &judge_direction_, 100, NULL);
       cv::createTrackbar("abrupt_variable_", window_name, &abrupt_variable_, 500, NULL);
-      cv::createTrackbar("Q", window_name, &Q_, 100, NULL);
-      cv::createTrackbar("R", window_name, &R_, 100, NULL);
+      cv::createTrackbar("Q", window_name, &Q_, 1000, NULL);
+      cv::createTrackbar("R", window_name, &R_, 1000, NULL);
       cv::imshow(window_name, sentry_trackbar_);
+      armor_config_.predict_trackbar = true;
     }
 
     num_cnt_++;
@@ -525,7 +526,7 @@ namespace basic_armor
       }
       last_last_forecast_pixels_ = last_forecast_pixels_;
       last_forecast_pixels_ = forecast_pixels_;
-      // forecast_pixels_           = kalman_.run(forecast_pixels_);
+      forecast_pixels_           = kalman_.run(forecast_pixels_);
     }
     // 计数器归零
     if (num_cnt_ % 10 == 0)
@@ -629,7 +630,7 @@ namespace basic_armor
             {
               // 储存装甲板
               // cv::line(draw_img_, armor_data_.right_light, vertex[(l + 1) % 4], cv::Scalar(0, 255, 255), 3, 8);
-              if (1 /*armor_data_.height * armor_data_.width > 250.0 && armor_data_.height * armor_data_.width < 8000.0*/)
+              if (armor_data_.width*1.0 / armor_data_.height > 0.8 && armor_data_.width*1.0 / armor_data_.height < 3.5)
               {
                 armor_.push_back(armor_data_);
                 if (armor_config_.armor_draw == 1 ||
@@ -695,6 +696,7 @@ namespace basic_armor
                           armor_data_.right_light.center);
 
           armor_data_.aspect_ratio = armor_data_.width / (MAX(armor_data_.left_light.size.height, armor_data_.right_light.size.height));
+          std::cout<<"rat"<<armor_data_.aspect_ratio<<"\n";
           // 灯条角度差
           if (fabs(armor_data_.left_light.angle - armor_data_.right_light.angle) <
               armor_config_.armor_angle_different * 0.1)
@@ -724,7 +726,7 @@ namespace basic_armor
               armor_data_.distinguish = 1;
               return true;
             }
-            return true;
+            //return true;
           }
         }
       }

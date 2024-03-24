@@ -8,7 +8,7 @@
  */
 
 #define gimbal_delay 800.0f // ms
-// #define RELEASE
+//#define RELEASE
 
 #include "new_buff.hpp"
 
@@ -133,6 +133,7 @@ namespace new_buff
                             cv::line(img_src, circles, tmp.obj, cv::Scalar(100, 255, 125), 2);
                             cv::putText(img_src, std::to_string(ratio), {boundRect[i].x, boundRect[i].y - 5}, 1, cv::FONT_HERSHEY_PLAIN, cv::Scalar(0, 69, 255), 1);
                             cv::imshow("inaction", img_src);
+                            
                             // cv::circle(img_src,{((boundRect[i].tl().x+boundRect[i].br().x)/2-circles.x)*48.0/56.0+circles.x,((boundRect[i].tl().y+boundRect[i].br().y)/2-circles.y)*48.0/56.0+circles.y},2,cv::Scalar(255,0,255),1);
                         } /*else{
                              line(img_src,P_a,P_b,cv::Scalar(100, 255, 125),2);
@@ -271,6 +272,7 @@ namespace new_buff
                         }*/
                         rectangle(img_src, boundRect[i].tl(), boundRect[i].br(), cv::Scalar(0, 255, 255), 2); // 框出图形
                         cv::imshow("circle", img_src);
+                        //cv::waitKey(30);
                         /*if(returnDistance(circles,{tlx,tly})<700.0&&returnDistance(circles,{tlx,tly})>50.0&&last_circles.x!=0&&last_circles.y!=0){
                             continue;
                         }*/
@@ -300,6 +302,7 @@ namespace new_buff
                         }*/
                         // cv::circle(img_src,inaction_check[j].obj,2,cv::Scalar(255,0,255),1);
                         cv::imshow("check", img_src);
+                        //cv::waitKey(30);
                         for (int k = 38; k <= 54; k++)
                         {
                             cv::circle(img_src, {(inaction_check[j].obj.x - circles.x) * k * 1.0 / 47.0 + circles.x, (inaction_check[j].obj.y - circles.y) * k * 1.0 / 47.0 + circles.y}, 3, cv::Scalar(255, 0, 255), 3);
@@ -381,6 +384,7 @@ namespace new_buff
 
                 cv::putText(img_src, "Dectected", {10, 10}, 1, cv::FONT_HERSHEY_PLAIN, cv::Scalar(0, 255, 255), 2);
                 cv::imshow("[dec]", img_src);
+                //cv::waitKey(30);
             }
         }
         if (cnt_obj == 0)
@@ -416,6 +420,7 @@ namespace new_buff
         cv::putText(img, std::to_string(center_dist), {(int)armor_now.x, (int)armor_now.y}, 1, cv::FONT_HERSHEY_PLAIN, cv::Scalar(0, 69, 255), 1);
 
         cv::imshow("predict img", img);
+        cv::waitKey(30);
         if (isFindTarget)
         {
             object_rects = cv::RotatedRect(object, armor_now_rects.size, armor_now_rects.angle);
@@ -561,7 +566,7 @@ namespace new_buff
         imgDila = imgGray.clone();
         imgGray2 = imgGray.clone();
         cv::imshow("act_img_11", imgGray2);
-
+	cv::waitKey(30);
         // preprocessing
         // cvtColor(img, imgGray,cv::COLOR_BGR2GRAY, 0);
         /*GaussianBlur(imgGray, imgBlur, cv::Size(65, 65), 1, 1);
@@ -623,9 +628,12 @@ namespace new_buff
         // morphologyEx(imgGray2, imgGray2, cv::MORPH_DILATE, ele_, cv::Point(-1, -1), 1);
         buff::getcontour(imgDila, imgGray2, img_src, moudle);
 #ifndef RELEASE
-        // imshow("Image", imgGray);
-        // imshow("Image2", imgDila);
-        // imshow("detect inaction", img_src);
+        imshow("Image", imgGray);
+        //cv::waitKey(30);
+        imshow("Image2", imgDila);
+        //cv::waitKey(30);
+        imshow("detect inaction", img_src);
+        //cv::waitKey(30);
 #endif
         // imshow("Image Gray", imgGray);
         // imshow("Image Blur", imgBlur);

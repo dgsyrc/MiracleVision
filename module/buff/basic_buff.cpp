@@ -184,6 +184,7 @@ bool Detector::runTask(cv::Mat& _input_img, const uart::Receive_Data& _receive_i
   imageProcessing(src_img_, bin_img_inaction, my_color_, static_cast<Processing_Moudle>(buff_config_.ctrl.PROCESSING_MODE), static_cast<new_buff::Check_Moudle>(new_buff::INACTION_MODE));
   // 查找目标
   cv::imshow("inaction_img_d",bin_img_inaction);
+  //cv::waitKey(30);
   big_buff.main_buff_checker(bin_img_action, _input_img, static_cast<new_buff::Check_Moudle>(new_buff::CIRCLE_MODE));
   big_buff.main_buff_checker(bin_img_action, _input_img, static_cast<new_buff::Check_Moudle>(new_buff::ACTION_MODE));
   big_buff.main_buff_checker(bin_img_inaction, _input_img, static_cast<new_buff::Check_Moudle>(new_buff::INACTION_MODE));

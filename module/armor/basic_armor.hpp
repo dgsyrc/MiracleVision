@@ -78,6 +78,7 @@ namespace basic_armor
     int big_armor_aspect_max;
 
     int armor_trackbar = 0;
+    int predict_trackbar = 0;
   };
 
   struct Light_Config
@@ -420,8 +421,8 @@ namespace basic_armor
     int optimal_armor = 0;
     int armor_position = 0;
     int armor_direction = 0;
-    int Q_ = 10;
-    int R_ = 5;
+    int Q_ = 1;
+    int R_ = 10;
     int num = 0;
 
     int num_cnt_ = 0;
@@ -448,7 +449,7 @@ namespace basic_armor
     // 预测效果大小 * 0.1
     int forecast_size_ = 3000;
     // 预测最大效果 * 装甲板宽度 * 0.1
-    int forecast_max_size_ = 15;
+    int forecast_max_size_ = 20;
     // 判断正负范围
     int judge_direction_ = 10;
     // 像素点宽度 1080p 1mm 4个像素点
