@@ -30,7 +30,7 @@ int main()
 
 #ifndef VIDEO_DEBUG
   mindvision::VideoCapture *mv_capture_ = new mindvision::VideoCapture(
-      mindvision::CameraParam(0, mindvision::RESOLUTION_1280_X_1024, mindvision::EXPOSURE_40000));
+      mindvision::CameraParam(0, mindvision::RESOLUTION_1280_X_1024, mindvision::EXPOSURE_2500));
   cv::VideoCapture cap_ = cv::VideoCapture(0);
 #else
 
@@ -122,6 +122,7 @@ int main()
         if (!test_fps)
         {
           std::time_t ed_time = std::time(nullptr);
+          cout<<ed_time - st_time<<"\n";
           cap_fps = (int)(200.0 / (ed_time - st_time));
           test_fps = true;
           rec_cnt = 0;
@@ -143,7 +144,7 @@ int main()
       {
         if (test_fps)
         {
-          if (rec_cnt > cap_fps * 60 * 1)
+          if (rec_cnt > cap_fps * 30 * 1)
           {
             writer.write(src_img);
             writer.release();
