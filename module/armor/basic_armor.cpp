@@ -293,6 +293,9 @@ namespace basic_armor
     int B_val = (int)(static_cast<int>(mean(channels[0]).val[0]));
     int G_val = (int)(static_cast<int>(mean(channels[1]).val[0]));
     int R_val = (int)(static_cast<int>(mean(channels[2]).val[0]));
+    tools::Tools::drawDiagram("B channel", B_channel_light, armor_config_.window_scale, (B_val * 1.0 / 255), "time", "Avg B", 255, cv::Scalar(255, 0, 0));
+    tools::Tools::drawDiagram("G channel", G_channel_light, armor_config_.window_scale, (G_val * 1.0 / 255), "time", "Avg G", 255, cv::Scalar(0, 255, 0));
+    tools::Tools::drawDiagram("R channel", R_channel_light, armor_config_.window_scale, (R_val * 1.0 / 255), "time", "Avg R", 255, cv::Scalar(0, 0, 255));
     fmt::print("[{}] B {} G {} R {}\n", idntifier_green, B_val, G_val, R_val);
     switch (my_color)
     {
@@ -341,9 +344,9 @@ namespace basic_armor
   {
     // 预处理
     std::string window_name = "basic_armor";
-    runImage(_src_img, _receive_data.my_color);
+    runImage(_src_img, /*_receive_data.my_color*/uart::RED);
     draw_img_ = _src_img.clone();
-    if (findLight(draw_img_, _receive_data.my_color))
+    if (findLight(draw_img_, /*_receive_data.my_color*/ uart::RED))
     {
       if (fittingArmor())
       {
@@ -360,9 +363,9 @@ namespace basic_armor
           if (armor_config_.debug_mode == 1)
           {
             tools::Tools::imWindow(window_name, draw_img_, armor_config_.window_scale);
-            tools::Tools::drawDiagram("diagram", armor_x_point, armor_config_.window_scale, (armor_data_.armor_rect.center.x * 1.0 / _src_img.cols), "time", "armor_x");
+            tools::Tools::drawDiagram("diagram", armor_x_point, armor_config_.window_scale, (armor_data_.armor_rect.center.x * 1.0 / _src_img.cols), "time", "armor_x", _src_img.cols);
           }
-
+          
           draw_img_ = cv::Mat::zeros(_src_img.size(), CV_8UC3);
         }
         return true;

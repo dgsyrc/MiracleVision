@@ -132,12 +132,6 @@ list(APPEND EXTRA_INCLUDES ${PROJECT_SOURCE_DIR}/module/filter)
 add_library(mv-basic-kalman SHARED module/filter/basic_kalman.cpp)
 list(APPEND MV_EXTRA_LIBS mv-basic-kalman)
 
-
-list(APPEND EXTRA_INCLUDES ${PROJECT_SOURCE_DIR}/module/record)
-add_library(mv-video-record SHARED module/record/record.cpp)
-list(APPEND mv_EXTRA_LIBS mv-video-record)
-
-
 list(APPEND EXTRA_INCLUDES ${PROJECT_SOURCE_DIR}/module/ml)
 add_library(mv-onnx-inferring SHARED module/ml/onnx_inferring.cpp)
 list(APPEND MV_EXTRA_LIBS mv-onnx-inferring)
@@ -192,7 +186,6 @@ target_compile_definitions(MiracleVision PRIVATE "CONFIG_FILE_PATH=\"${CONFIG_FI
 target_compile_definitions(MiracleVision PRIVATE "SOURCE_PATH=\"${SOURCE_PATH}\"")
 target_compile_definitions(mv-basic-buff PRIVATE "CONFIG_FILE_PATH=\"${CONFIG_FILE_PATH}\"")
 target_compile_definitions(mv-onnx-inferring PRIVATE "CONFIG_FILE_PATH=\"${CONFIG_FILE_PATH}\"")
-target_compile_definitions(mv-video-record PRIVATE "CONFIG_FILE_PATH=\"${CONFIG_FILE_PATH}\"")
 target_compile_definitions(mv-camera-calibration PRIVATE "SAVE_FILE_PATH=\"${SAVE_FILE_PATH}\"")
 
 

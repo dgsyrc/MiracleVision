@@ -474,6 +474,9 @@ namespace basic_armor
     float initial_gyroscope_ = 0.f;
 
     std::queue<float> armor_x_point;
+    std::queue<float> B_channel_light;
+    std::queue<float> G_channel_light;
+    std::queue<float> R_channel_light;
   };
 
 } // namespace basic_armor

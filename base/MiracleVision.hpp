@@ -24,7 +24,6 @@
 #include "module/armor/DNN_armor.hpp"
 #include "module/buff/basic_buff.hpp"
 #include "module/ml/onnx_inferring.hpp"
-#include "module/record/record.hpp"
 #include "module/roi/basic_roi.hpp"
 #include "utils/reset_mv_camera.hpp"
 #include "module/camera/camera_calibration.hpp"
