@@ -65,12 +65,6 @@ int main()
   angle_solve::solve buff_solution;
   buff_solution.set_config(fmt::format("{}{}", CONFIG_FILE_PATH, "/angle_solve/buff_angle_solve_config.xml"));
 
-  // record ([Unresolved]cannot save video)
-  /*RecordMode::Record record_ = RecordMode::Record(
-      fmt::format("{}{}", CONFIG_FILE_PATH, "/record/recordpath_save.yaml"),
-      fmt::format("{}{}", CONFIG_FILE_PATH, "/record/record_packeg/record.avi"),
-      cv::Size(1280, 1024)); */
-  // remember to edit resolution
   basic_roi::RoI save_roi;
   fps::FPS global_fps_;
   basic_roi::RoI roi_;
@@ -109,26 +103,21 @@ int main()
 #endif
     if (!src_img.empty())
     {
-      // src_img = src_img * 2;
 #ifdef RECORD
       if (!test_fps && rec_cnt < 200)
       {
-        std::cout << rec_cnt << '\n';
         rec_cnt++;
-        // continue;
       }
       else
       {
         if (!test_fps)
         {
           std::time_t ed_time = std::time(nullptr);
-          cout << ed_time - st_time << "\n";
           cap_fps = (int)(200.0 / (ed_time - st_time));
           test_fps = true;
           rec_cnt = 0;
         }
       }
-      cout << "A\n";
       if (rec_cnt == 0 && test_fps)
       {
         std::stringstream tmp;
@@ -142,9 +131,10 @@ int main()
       }
       else
       {
+        cout << "[REC] frame:" << rec_cnt << " fps:" << cap_fps << "\n";
         if (test_fps)
         {
-          if (rec_cnt > cap_fps * 30 * 1)
+          if (rec_cnt > cap_fps * 60 * 1)
           {
             writer.write(src_img);
             writer.release();
@@ -157,11 +147,8 @@ int main()
           }
         }
       }
-      cout << "[REC] " << rec_cnt << ' ' << cap_fps << "\n";
+
 #endif
-      // src_img = src_img * 2; // increase brightness
-      // cv::imshow("[origin]", src_img);
-      // cv::waitKey(30);
 #ifndef RELEASE
       cv::imshow("[origin]", src_img);
       cv::waitKey(30);
@@ -174,7 +161,6 @@ int main()
 #endif
       fire = false;
       serial_.updateReceiveInformation();
-      fmt::print("[MODE] {}\n", serial_.returnReceiveMode());
       switch (serial_.returnReceiveMode())
       {
       // basic auto aim mode

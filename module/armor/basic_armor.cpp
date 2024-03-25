@@ -192,7 +192,7 @@ namespace basic_armor
                      cv::RETR_EXTERNAL,
                      cv::CHAIN_APPROX_NONE);
     // tools::Tools::imWindow("bin", bin_color_img, armor_config_.window_scale);
-    std::cout << "c_size " << contours.size() << '\n';
+    // std::cout << "c_size " << contours.size() << '\n';
     if (contours.size() < 2)
     {
       fmt::print("[{}] Info, quantity of contours less than 2\n", idntifier_green);
@@ -247,7 +247,6 @@ namespace basic_armor
       static float _w = MIN(box.size.width, box.size.height);
       static float light_w_h = _h / _w;
       // 判断灯条的条件
-      std::cout << "angle\n";
       if (box.angle < light_config_.angle_max &&
           box.angle > light_config_.angle_min &&
           light_w_h < light_config_.ratio_w_h_max &&
@@ -257,7 +256,6 @@ namespace basic_armor
         light_.emplace_back(box);
         if (light_config_.light_draw == 1 || light_config_.light_edit == 1)
         {
-          std::cout << "draw\n";
           cv::Point2f vertex[4];
           box.points(vertex);
           cv::putText(draw_img_, std::to_string(int(box.angle)), {int(vertex[1].x), int(vertex[1].y - 5)}, cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0, 255, 255));
@@ -359,7 +357,6 @@ namespace basic_armor
             armor_config_.armor_edit == 1 ||
             light_config_.light_edit == 1)
         {
-          fmt::print("[{}] {}\n", idntifier_red, armor_data_.width * armor_data_.height);
           if (armor_config_.debug_mode == 1)
           {
             tools::Tools::imWindow(window_name, draw_img_, armor_config_.window_scale);
@@ -678,10 +675,6 @@ namespace basic_armor
     armor_data_.light_width_aspect =
         armor_data_.left_light_width / armor_data_.right_light_width;
 
-    /*fmt::print("[info] {}<{} {}>{} {}<{} {}>{}\n", armor_data_.light_height_aspect, armor_config_.light_height_ratio_max * 0.1,
-    armor_data_.light_height_aspect, armor_config_.light_height_ratio_min * 0.1,
-    armor_data_.light_width_aspect, armor_config_.light_width_ratio_max  * 0.1,
-    armor_data_.light_width_aspect, armor_config_.light_height_ratio_min * 0.1);*/
     // 左右灯条高宽比
     if (armor_data_.light_height_aspect < armor_config_.light_height_ratio_max * 0.1 &&
         armor_data_.light_height_aspect > armor_config_.light_height_ratio_min * 0.1 &&

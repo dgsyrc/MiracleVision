@@ -86,19 +86,14 @@ namespace uart
     memset(receive_buff_, 0, REC_INFO_LENGTH * 2);
     // 接收数据
     read_message_ = read(fd, receive_buff_temp_, sizeof(receive_buff_temp_));
-    fmt::print("[info] in 10 {}\n", sizeof(receive_buff_temp_));
-    // printf("%s\n",read_message_);
-    fmt::print("[info] in 10 {} {}\n", receive_buff_temp_[0], receive_buff_temp_[1]);
     for (int i = 0; i != sizeof(receive_buff_temp_); ++i)
     {
-      fmt::print("{:d} ", receive_buff_temp_[i]);
       if (receive_buff_temp_[i] == 'S' && receive_buff_temp_[i + sizeof(receive_buff_) - 1] == 'E')
       {
         if (!get_flag)
         {
           get_flag = true;
         }
-        fmt::print("[info] insert {:d}\n", receive_buff_temp_[i]);
         if (serial_config_.show_serial_information == 1)
         {
           fmt::print("[{}] receiveData() ->", idntifier_green);
@@ -119,7 +114,6 @@ namespace uart
         break;
       }
     }
-    fmt::print("\n");
     tcflush(fd, TCIFLUSH);
   }
 
@@ -291,7 +285,6 @@ namespace uart
     write_buff_[0] = 0x53;
     write_buff_[1] = static_cast<unsigned char>(data_type);
     write_buff_[2] = static_cast<unsigned char>(is_shooting);
-    fmt::print("[info] {}\n", pitch);
     if (data_type == 0)
     {
       write_buff_[3] = 0;
@@ -342,9 +335,7 @@ namespace uart
 
   void SerialPort::updateReceiveInformation()
   {
-    // cv::waitKey(50);
     receiveData();
-    //fmt::print("[info] in 1\n");
     if (!isEmpty())
     {
       if (pre_mode != receive_buff_[2])
@@ -359,24 +350,22 @@ namespace uart
     {
       return;
     }
-    //fmt::print("[info] in 2\n");
-    //receive_buff_[1] = RED;
+    // receive_buff_[1] = RED;
     switch (receive_buff_[1])
     {
     case RED:
       receive_data_.my_color = RED;
-      fmt::print("[info] My color is RED\n");
+      fmt::print("[{}] My color is RED\n", idntifier_green);
       break;
     case BLUE:
       receive_data_.my_color = BLUE;
-      fmt::print("[info] My color is BLUE\n");
+      fmt::print("[{}] My color is BLUE\n", idntifier_green);
       break;
     default:
       receive_data_.my_color = ALL;
-      fmt::print("[info] My color is ALL\n");
+      fmt::print("[{}] My color is ALL\n", idntifier_green);
       break;
     }
-    fmt::print("[rec info] GET\n");
     switch (receive_buff_[2])
     {
     case AUTO_AIM:
@@ -428,40 +417,36 @@ namespace uart
     {
       receive_data_.raw_yaw_angle.arr_yaw[i] = receive_buff_[4 + i];
     }
-    // fmt::print("[info] yaw:{}\n",receive_data_.raw_yaw_angle.yaw);
     receive_data_.yaw = receive_data_.raw_yaw_angle.yaw / 100.0;
-    fmt::print("[rec info] yaw:{}\n", receive_data_.yaw);
+    fmt::print("[{}] yaw:{}\n", idntifier_green, receive_data_.yaw);
 
     for (size_t i = 0; i != sizeof(receive_data_.raw_pitch_angle.pitch); ++i)
     {
       receive_data_.raw_pitch_angle.arr_pitch[i] = receive_buff_[6 + i];
     }
-    // fmt::print("[info] pitch:{}\n",receive_data_.raw_pitch_angle.pitch);
     receive_data_.pitch = receive_data_.raw_pitch_angle.pitch / 100.0;
-    fmt::print("[rec info] pitch:{}\n", receive_data_.pitch);
+    fmt::print("[{}] pitch:{}\n", idntifier_green, receive_data_.pitch);
 
     for (size_t i = 0; i != sizeof(receive_data_.raw_yaw_velocity.veloctiy); ++i)
     {
       receive_data_.raw_yaw_velocity.arr_yaw_velocity[i] = receive_buff_[8 + i];
     }
-    fmt::print("[rec info] yaw_velocity:{}\n", receive_data_.raw_yaw_velocity.veloctiy);
+    fmt::print("[{}] yaw_velocity:{}\n", idntifier_green, receive_data_.raw_yaw_velocity.veloctiy);
     receive_data_.yaw_velocity = receive_data_.raw_yaw_velocity.veloctiy / 100.0;
-    // fmt::print("[info] yaw_velocity:{}\n",receive_data_.raw_yaw_velocity.veloctiy);
 
     for (size_t i = 0; i != sizeof(receive_data_.raw_pitch_velocity.veloctiy); ++i)
     {
       receive_data_.raw_pitch_velocity.arr_pitch_velocity[i] = receive_buff_[10 + i];
     }
-    fmt::print("[rec info] pitch_velocity:{}\n", receive_data_.raw_pitch_velocity.veloctiy);
+    fmt::print("[{}] pitch_velocity:{}\n", idntifier_green, receive_data_.raw_pitch_velocity.veloctiy);
     receive_data_.pitch_velocity = receive_data_.raw_pitch_velocity.veloctiy / 100.0;
-    // fmt::print("[info] pitch_velocity:{}\n",receive_data_.raw_pitch_velocity.veloctiy);
 
     receive_data_.raw_bullet_velocity.arr_veloctiy = receive_buff_[12];
     if (receive_data_.raw_bullet_velocity.veloctiy == 0)
     {
-      receive_data_.raw_bullet_velocity.veloctiy = 200;
+      receive_data_.raw_bullet_velocity.veloctiy = 155; // default velocity
     }
-    fmt::print("[rec info] bullet_velocity:{}\n", receive_data_.raw_bullet_velocity.arr_veloctiy);
+    fmt::print("[{}] bullet_velocity:{}\n", idntifier_green, receive_data_.raw_bullet_velocity.arr_veloctiy);
     receive_data_.bullet_velocity = receive_data_.raw_bullet_velocity.veloctiy / 10.0;
   }
 } // namespace uart
