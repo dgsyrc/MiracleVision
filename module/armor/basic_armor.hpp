@@ -106,7 +106,7 @@ namespace basic_armor
     int red_armor_color_th;
     int blue_armor_gray_th;
     int blue_armor_color_th;
-    int while_armor_color_th;
+    int white_armor_color_th;
     int green_armor_color_th;
     // 红 HSV 参数
     int h_red_max;
@@ -358,17 +358,17 @@ namespace basic_armor
      *
      * @param _bin_gray_img           灰度图
      * @param _bin_color_img          bgr处理二值图
-     * @param _bin_while_img          while处理二值图
+     * @param _bin_white_img          white处理二值图
      * @return cv::Mat
      */
-    cv::Mat fuseImage(const cv::Mat _bin_gray_img, const cv::Mat _bin_color_img, const cv::Mat _bin_while_img);
+    cv::Mat fuseImage(const cv::Mat _bin_gray_img, const cv::Mat _bin_color_img, const cv::Mat _bin_white_img);
     /**
      * @brief  白色通道处理
      *
      * @param _src_img         原图
      * @return cv::Mat
      */
-    cv::Mat whilePretreat(const cv::Mat &_src_img);
+    cv::Mat whitePretreat(const cv::Mat &_src_img);
     bool colorCheck(cv::RotatedRect &rect, cv::Mat &src_img, uart::Color my_color);
 
   private:
@@ -382,7 +382,7 @@ namespace basic_armor
     cv::Mat frame;
     cv::Mat draw_img_;
     cv::Mat gray_img_;
-    cv::Mat while_img_;
+    cv::Mat white_img_;
     cv::Mat hsv_img;
     cv::Mat bin_gray_img;
     cv::Mat bin_red_gray_img;
@@ -392,7 +392,7 @@ namespace basic_armor
     cv::Mat bin_blue_color_img;
     cv::Mat bin_red_green_img;
     cv::Mat bin_blue_green_img;
-    cv::Mat gray_while_img_;
+    cv::Mat gray_white_img_;
     // 滑动条窗口
     const cv::Mat light_trackbar_ = cv::Mat::zeros(1, 300, CV_8UC1);
     const cv::Mat armor_trackbar_ = cv::Mat::zeros(1, 300, CV_8UC1);

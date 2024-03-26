@@ -27,7 +27,7 @@ namespace basic_armor
       fs_armor["RED_ARMOR_COLOR_TH"] >> image_config_.red_armor_color_th;
       fs_armor["BLUE_ARMOR_COLOR_TH"] >> image_config_.blue_armor_color_th;
       fs_armor["GREEN_ARMOR_COLOR_TH"] >> image_config_.green_armor_color_th;
-      fs_armor["WHILE_ARMOR_COLOR_TH"] >> image_config_.while_armor_color_th;
+      fs_armor["WHITE_ARMOR_COLOR_TH"] >> image_config_.white_armor_color_th;
     }
     else
     {
@@ -120,7 +120,7 @@ namespace basic_armor
     fs_armor << "RED_ARMOR_COLOR_TH" << image_config_.red_armor_color_th;
     fs_armor << "BLUE_ARMOR_COLOR_TH" << image_config_.blue_armor_color_th;
     fs_armor << "GREEN_ARMOR_COLOR_TH" << image_config_.green_armor_color_th;
-    fs_armor << "WHILE_ARMOR_COLOR_TH" << image_config_.while_armor_color_th;
+    fs_armor << "WHITE_ARMOR_COLOR_TH" << image_config_.white_armor_color_th;
 
     fs_armor << "H_RED_MIN" << image_config_.h_red_min;
     fs_armor << "H_RED_MAX" << image_config_.h_red_max;
@@ -249,8 +249,8 @@ namespace basic_armor
       // 判断灯条的条件
       if (box.angle < light_config_.angle_max &&
           box.angle > light_config_.angle_min &&
-          light_w_h < light_config_.ratio_w_h_max &&
-          light_w_h > light_config_.ratio_w_h_min &&
+          light_w_h < light_config_.ratio_w_h_max / 10.0 &&
+          light_w_h > light_config_.ratio_w_h_min / 10.0 &&
           box.size.height * box.size.width < 30000)
       {
         light_.emplace_back(box);
@@ -679,7 +679,7 @@ namespace basic_armor
     if (armor_data_.light_height_aspect < armor_config_.light_height_ratio_max * 0.1 &&
         armor_data_.light_height_aspect > armor_config_.light_height_ratio_min * 0.1 &&
         armor_data_.light_width_aspect < armor_config_.light_width_ratio_max * 0.1 &&
-        armor_data_.light_width_aspect > armor_config_.light_height_ratio_min * 0.1)
+        armor_data_.light_width_aspect > armor_config_.light_width_ratio_min * 0.1)
     {
       armor_data_.height =
           MIN(armor_data_.left_light.size.height, armor_data_.right_light.size.height);
@@ -696,7 +696,7 @@ namespace basic_armor
                           armor_data_.right_light.center);
 
           armor_data_.aspect_ratio = armor_data_.width / (MAX(armor_data_.left_light.size.height, armor_data_.right_light.size.height));
-          std::cout << "rat" << armor_data_.aspect_ratio << "\n";
+          // std::cout << "rat" << armor_data_.aspect_ratio << "\n";
           // 灯条角度差
           if (fabs(armor_data_.left_light.angle - armor_data_.right_light.angle) <
               armor_config_.armor_angle_different * 0.1)
@@ -787,30 +787,30 @@ namespace basic_armor
     {
     case 0:
       bin_color_img = fuseImage(grayPretreat(_src_img, _my_color),
-                                bgrPretreat(_src_img, _my_color), whilePretreat(_src_img));
+                                bgrPretreat(_src_img, _my_color), whitePretreat(_src_img));
       break;
     default:
       bin_color_img = fuseImage(grayPretreat(_src_img, _my_color),
-                                hsvPretreat(_src_img, _my_color), whilePretreat(_src_img));
+                                hsvPretreat(_src_img, _my_color), whitePretreat(_src_img));
       break;
     }
   }
 
-  cv::Mat Detector::fuseImage(const cv::Mat _bin_gray_img, const cv::Mat _bin_color_img, const cv::Mat _while_img)
+  cv::Mat Detector::fuseImage(const cv::Mat _bin_gray_img, const cv::Mat _bin_color_img, const cv::Mat _white_img)
   {
     cv::bitwise_and(_bin_color_img, _bin_gray_img, _bin_color_img);
-    cv::bitwise_and(_bin_color_img, _while_img, _bin_color_img);
+    cv::bitwise_and(_bin_color_img, _white_img, _bin_color_img);
     cv::morphologyEx(_bin_color_img, _bin_color_img, cv::MORPH_DILATE, ele_);
     cv::medianBlur(_bin_color_img, _bin_color_img, 5);
     return _bin_color_img;
   }
 
-  inline cv::Mat Detector::whilePretreat(const cv::Mat &_src_img)
+  inline cv::Mat Detector::whitePretreat(const cv::Mat &_src_img)
   {
-    cv::cvtColor(_src_img, gray_while_img_, cv::COLOR_BGR2GRAY);
-    cv::threshold(gray_while_img_, while_img_, image_config_.while_armor_color_th, 255, cv::THRESH_BINARY);
-    cv::bitwise_not(while_img_, while_img_);
-    return while_img_;
+    cv::cvtColor(_src_img, gray_white_img_, cv::COLOR_BGR2GRAY);
+    cv::threshold(gray_white_img_, white_img_, image_config_.white_armor_color_th, 255, cv::THRESH_BINARY);
+    cv::bitwise_not(white_img_, white_img_);
+    return white_img_;
   }
 
   inline cv::Mat Detector::grayPretreat(const cv::Mat &_src_img,

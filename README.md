@@ -104,10 +104,8 @@ sudo ./bin/MiracleVision
 | 0    | DEFAULT_MODE             | 默认模式（基础自瞄模式） |
 | 1    | AUTO_AIM                 | 基础自瞄模式             |
 | 2    | ENERGY_BUFF              | 能量机关模式             |
-| 3    | RECORD_MODE              | 内录模式                 |
-| 4    | PLANE_MODE               | 无人机模式               |
-| 5    | SENTINEL_AUTONOMOUS_MODE | 哨兵模式                 |
-| 6    | CAMERA_CALIBRATION       | 相机标定模式             |
+| 3    | SENTINEL_AUTONOMOUS_MODE | 哨兵模式                 |
+| 4    | CAMERA_CALIBRATION       | 相机标定模式             |
 
 2.二进制数换算：
 

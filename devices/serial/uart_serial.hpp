@@ -57,10 +57,6 @@ namespace uart
     AUTO_AIM,
     // 能量机关模式
     ENERGY_BUFF,
-    // 内录模式（弃用）
-    RECORD_MODE,
-    // 无人机模式（未启用）
-    PLANE_MODE,
     // 哨兵模式（未启用）
     SENTINEL_AUTONOMOUS_MODE,
     // 相机标定模式

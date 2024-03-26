@@ -193,8 +193,6 @@ int main()
           serial_.updataWriteData(0, 0, 0, 0, {0, 0}, 0);
         }
         break;
-      case uart::RECORD_MODE:
-        break;
       case uart::PLANE_MODE:
         break;
       // [Unresolved] add number identification
