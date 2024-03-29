@@ -8,7 +8,7 @@
 #include "MiracleVision.hpp"
 
 // video debug mode
-#define VIDEO_DEBUG
+//#define VIDEO_DEBUG
 #define RECORD
 
 // auto fire
@@ -192,8 +192,6 @@ int main()
         {
           serial_.updataWriteData(0, 0, 0, 0, {0, 0}, 0);
         }
-        break;
-      case uart::PLANE_MODE:
         break;
       // [Unresolved] add number identification
       case uart::SENTINEL_AUTONOMOUS_MODE:

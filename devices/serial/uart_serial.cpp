@@ -374,12 +374,6 @@ namespace uart
     case ENERGY_BUFF:
       receive_data_.now_run_mode = ENERGY_BUFF;
       break;
-    case RECORD_MODE:
-      receive_data_.now_run_mode = RECORD_MODE;
-      break;
-    case PLANE_MODE:
-      receive_data_.now_run_mode = PLANE_MODE;
-      break;
     case SENTINEL_AUTONOMOUS_MODE:
       receive_data_.now_run_mode = SENTINEL_AUTONOMOUS_MODE;
       break;

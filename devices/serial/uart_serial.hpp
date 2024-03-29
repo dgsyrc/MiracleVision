@@ -76,7 +76,7 @@ namespace uart
   // 串口信息
   struct Serial_Config
   {
-    std::string preferred_device = "/dev/ttyACM0";
+    std::string preferred_device = "/dev/ttyUSB0";
     int set_baudrate = 0;
     int show_serial_information = 0;
   };
