@@ -171,6 +171,10 @@ int main()
         {
           solution.angleSolve(basic_armor_.returnFinalArmorRotatedRect(0), src_img.size().height, src_img.size().width, serial_);
         }
+        if(basic_armor_.returnArmorNum())
+        {
+          fire = true;
+        }
         serial_.updataWriteData(basic_armor_.returnArmorNum(), fire,
                                 solution.returnYawAngle(),
                                 solution.returnPitchAngle(),
