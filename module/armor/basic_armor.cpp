@@ -640,7 +640,7 @@ namespace basic_armor
 
               if (armor_data_.width * 1.0 / armor_data_.height > 1.0 && armor_data_.width * 1.0 / armor_data_.height < 5.0)
               {
-                // tools::Tools::drawDiagram("W/H", W_H_armor, armor_config_.window_scale, (armor_data_.width * 1.0 / armor_data_.height / 12.0), "time", "W/H", 12, cv::Scalar(255, 0, 0));
+                //tools::Tools::drawDiagram("W/H", W_H_armor, armor_config_.window_scale, (armor_data_.width * 1.0 / armor_data_.height / 12.0), "time", "W/H", 12, cv::Scalar(255, 0, 0));
                 armor_.push_back(armor_data_);
                 if (armor_config_.armor_draw == 1 ||
                     armor_config_.armor_edit == 1)
