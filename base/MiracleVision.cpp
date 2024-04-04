@@ -12,7 +12,7 @@
 #define RECORD
 
 // auto fire
-#define MANUAL_FIRE
+// #define MANUAL_FIRE
 
 // debug mode
 // #define PARM_EDIT
@@ -34,7 +34,7 @@ int main()
   cv::VideoCapture cap_ = cv::VideoCapture(0);
 #else
 
-  cv::VideoCapture cap_(fmt::format("{}{}", SOURCE_PATH, "/video/armor.mp4"));
+  cv::VideoCapture cap_(fmt::format("{}{}", SOURCE_PATH, "/video/BD-002.mp4"));
 
 #endif
   fmt::print("Capture init pass.\n");
@@ -171,7 +171,7 @@ int main()
         {
           solution.angleSolve(basic_armor_.returnFinalArmorRotatedRect(0), src_img.size().height, src_img.size().width, serial_);
         }
-        if(basic_armor_.returnArmorNum())
+        if (basic_armor_.returnArmorNum())
         {
           fire = true;
         }

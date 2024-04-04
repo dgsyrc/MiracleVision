@@ -477,6 +477,7 @@ namespace basic_armor
     std::queue<float> B_channel_light;
     std::queue<float> G_channel_light;
     std::queue<float> R_channel_light;
+    std::queue<float> W_H_armor;
   };
 
 } // namespace basic_armor

@@ -101,8 +101,8 @@ namespace tools
             int height;
             int plotWidth;
             int plotHeight;
-            int min_data;
-            int max_data;
+            float min_data;
+            float max_data;
             int data_size;
             cv::Point origin;
             std::vector<float> vec_data;
@@ -156,8 +156,8 @@ namespace tools
                 data.push(tmp);
                 vec_data.push_back(tmp);
             }
-            min_data = int(*std::min_element(vec_data.begin(), vec_data.end()) * y_domain);
-            max_data = int(*std::max_element(vec_data.begin(), vec_data.end()) * y_domain);
+            min_data = *std::min_element(vec_data.begin(), vec_data.end()) * y_domain;
+            max_data = *std::max_element(vec_data.begin(), vec_data.end()) * y_domain;
             cv::Mat canvas = cv::Mat::zeros(height, width, CV_8UC3);
             canvas = cv::Scalar(255, 255, 255);
             cv::namedWindow(window_name, cv::WINDOW_AUTOSIZE);
@@ -215,11 +215,11 @@ namespace tools
             cv::putText(img, yLabel, cv::Point(origin.x + 10, origin.y - height - 10), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0));
         }
 
-        inline static void addInfo(cv::Mat &img, int min_data, int max_data)
+        inline static void addInfo(cv::Mat &img, float min_data, float max_data)
         {
 
-            cv::putText(img, fmt::format("min:{}", min_data), cv::Point(img.cols - 80, 30), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0));
-            cv::putText(img, fmt::format("max:{}", max_data), cv::Point(img.cols - 80, 60), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0));
+            cv::putText(img, fmt::format("min:{:.2f}", min_data), cv::Point(img.cols - 80, 30), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0));
+            cv::putText(img, fmt::format("max:{:.2f}", max_data), cv::Point(img.cols - 80, 60), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0));
         }
     };
 };
